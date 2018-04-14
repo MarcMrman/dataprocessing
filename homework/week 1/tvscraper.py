@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-# Name:
-# Student number:
+# Name: Marc Moorman   
+# Student number: 10769781
 """
 This script scrapes IMDB and outputs a CSV file with highest rated tv series.
 """
@@ -49,7 +49,7 @@ def extract_tvseries(dom):
         # retrieving actors per series
         a = series.find_all('a', href=lambda href: href and '?ref_=adv_li_st' in href)
         
-        # filtering out html tags from list of actors and join them into string
+        # filtering out html tags from list of actors and join them into a list
         for actors in a:
             actor = actors.text  
             actorList.append(actor)
