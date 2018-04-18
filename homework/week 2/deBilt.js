@@ -29,44 +29,36 @@ for(var i = 0; i < dict.length - 1; i ++){
 	temps.push(temp);
 }
 
+for (var i = 0; i < dates.length; i ++){
+	var date1 = date.getTime(dayData[0])
+}
+
 // create dates for temperature points SUBSTRINGS van maken om op de goede manier te doen
 for(var i = 17167 ; i < 17532; i ++){
 		var date = new Date(i * 86400000);
 		dates.push(date)
 }
-//console.log(dates)
-//console.log(temps)
+
+//var date1 = date.getTime();
 
 // find min and max temperature
 var minTemp = Math.min.apply(Math, temps);
 var maxTemp = Math.max.apply(Math, temps);
-console.log(maxTemp)
-console.log(minTemp)
 
 // find earliest and latest date
 var minDate = Math.min.apply(Math, dates)
 var maxDate = Math.max.apply(Math, dates)
-console.log(minDate)
-console.log(maxDate)
 
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 
+// determining domaines and ranges
 var domainTemp = [minTemp, maxTemp]
 var rangeTemp = [20, 400]
 var domainDate = [minDate, maxDate]
 var rangeDate = [20, 500]
 
-createTransform(domainTemp, rangeTemp)
-createTransform(domainDate, rangeDate)
-
 function createTransform(domain, range){
-	// domain is a two-element array of the data bounds [domain_min, domain_max]
-	// range is a two-element array of the screen bounds [range_min, range_max]
-	// this gives you two equations to solve:
-	// range_min = alpha * domain_min + beta
-	// range_max = alpha * domain_max + beta
- 	// a solution would be:
 
     var domain_min = domain[0]
     var domain_max = domain[1]
@@ -77,8 +69,6 @@ function createTransform(domain, range){
    	var alpha = (range_max - range_min) / (domain_max - domain_min)
     var beta = range_max - alpha * domain_max
 
-    console.log(alpha)
-    console.log(beta)
     // returns the function for the linear transformation (y= a * x + b)
     return function(x){
       return alpha * x + beta;
@@ -93,9 +83,25 @@ ctx.lineTo(500, 400);
 ctx.stroke();
 
 // text in graph
-// ctx.font = "24px arial";
-// ctx.strokeText("Average temperature deBilt (2017)", 200, 20)
-// ctx.font = "10px arial"
-// ctx.fillText("Average temperature", 0, 10);
-// ctx.font = "10px arial"
-// ctx.fillText("Date", 450, 420);
+ctx.font = "24px arial";
+ctx.strokeText("Average temperature deBilt (2017)", 200, 20)
+ctx.font = "10px arial"
+ctx.fillText("Average temperature", 0, 10);
+ctx.font = "10px arial"
+ctx.fillText("Date", 450, 420);
+
+// Create datapoints
+var yaxis = createTransform(domainTemp, rangeTemp)
+var xaxis = createTransform(domainDate, rangeDate)
+
+// Plot graph
+for (var i = 0; i < temps.length; i ++){
+	var firstX = xaxis(dates[i]);
+	var nextX = xaxis(dates[i + 1]);
+	var firstY = yaxis(temps[i]);
+	var nextY = yaxis(temps[i + 1]);
+
+	ctx.moveTo(firstX, firstY),
+	ctx.lineTo(nextX, nextY),
+	ctx.stroke();
+}
