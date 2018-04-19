@@ -27,37 +27,69 @@ for(var i = 0; i < dict.length - 1; i ++){
 	
 	var temp = parseInt(dayData[1])
 	temps.push(temp);
-}
 
-for (var i = 0; i < dates.length; i ++){
-	var date1 = date.getTime(dayData[0])
+	var date = dayData[0];
+	dates.push(date)
 }
+//console.log(dates)
 
-// create dates for temperature points SUBSTRINGS van maken om op de goede manier te doen
-for(var i = 17167 ; i < 17532; i ++){
-		var date = new Date(i * 86400000);
-		dates.push(date)
+var JSdates = [];
+
+// make arrays with which JS can create JS dates
+for ( var i = 0; i < dates.length; i ++){
+	var tempDate = [];
+	
+	// divide string up into yyy/mm/dd
+	var year = dates[i].substring(0, 4)
+	var month = dates[i].substring(4, 6)
+	var day = dates[i].substring(6, 8)
+	
+	tempDate.push(year, month, day)
+	var tempDate1 = tempDate.join("-")
+	JSdates.push(tempDate1)
+	//console.log(tempDate)
 }
+//console.log(JSdates)
 
-//var date1 = date.getTime();
+// convert date strings to javascript dates
+var jsDatesUse= [];
+for (var i = 0; i < JSdates.length; i ++){
+	var JSdates1 = new Date(JSdates[i])
+	jsDatesUse.push(JSdates1)
+}
+//console.log(jsDatesUse)
+
+// milliseconds van maken
+// var dateMil = [];
+// for (var i = 0; i < jsDatesUse.length; i ++){
+// 	var d1 = jsDatesUse[i].getTime();
+// 	dateMil.push(d1)
+// }
+// console.log(dateMil)
 
 // find min and max temperature
 var minTemp = Math.min.apply(Math, temps);
+//console.log("min temp:", minTemp)
 var maxTemp = Math.max.apply(Math, temps);
+//console.log("max temp:", maxTemp)
 
 // find earliest and latest date
-var minDate = Math.min.apply(Math, dates)
-var maxDate = Math.max.apply(Math, dates)
+var minDate = Math.min.apply(Math, jsDatesUse)
+//console.log("min date:", minDate)
+var maxDate = Math.max.apply(Math, jsDatesUse)
+//console.log("max date:", maxDate)
 
+// initialize canvas
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 
 // determining domaines and ranges
 var domainTemp = [minTemp, maxTemp]
-var rangeTemp = [20, 400]
+var rangeTemp = [100, 480]
 var domainDate = [minDate, maxDate]
-var rangeDate = [20, 500]
+var rangeDate = [100, 580]
 
+// function to determine slope and coordinates
 function createTransform(domain, range){
 
     var domain_min = domain[0]
@@ -75,11 +107,15 @@ function createTransform(domain, range){
     }
 }
 
+// calcualte alpha and beta for both range and domain
+var yaxis = createTransform(domainTemp, rangeTemp)
+var xaxis = createTransform(domainDate, rangeDate)
+
 // Graph axis
 ctx.beginPath();
-ctx.moveTo(20, 20);
-ctx.lineTo(20, 400);
-ctx.lineTo(500, 400);
+ctx.moveTo(100, 100);
+ctx.lineTo(100, 480);
+ctx.lineTo(580, 480);
 ctx.stroke();
 
 // text in graph
@@ -90,18 +126,15 @@ ctx.fillText("Average temperature", 0, 10);
 ctx.font = "10px arial"
 ctx.fillText("Date", 450, 420);
 
-// Create datapoints
-var yaxis = createTransform(domainTemp, rangeTemp)
-var xaxis = createTransform(domainDate, rangeDate)
-
 // Plot graph
 for (var i = 0; i < temps.length; i ++){
-	var firstX = xaxis(dates[i]);
-	var nextX = xaxis(dates[i + 1]);
+
+	var firstX = xaxis(jsDatesUse[i]);
+	var nextX = xaxis(jsDatesUse[i + 1]);
 	var firstY = yaxis(temps[i]);
 	var nextY = yaxis(temps[i + 1]);
-
-	ctx.moveTo(firstX, firstY),
-	ctx.lineTo(nextX, nextY),
+	
+	ctx.moveTo(firstX, maxTemp - firstY),
+	ctx.lineTo(nextX, maxTemp - nextY),
 	ctx.stroke();
 }
