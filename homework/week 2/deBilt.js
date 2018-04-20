@@ -14,6 +14,7 @@ var dict = [];
 
 // remove whitespaces from strings
 for (var i = 0; i < lines.length; i ++){
+	
 	var line = lines[i].replace(/\s+/g, "");
 	dict.push(line);
 }
@@ -23,20 +24,20 @@ var temps = [];
 
 // split arrays at comma's and push temperatures to array
 for(var i = 0; i < dict.length - 1; i ++){
-	var dayData = dict[i].split(',');
 	
+	var dayData = dict[i].split(',');
 	var temp = parseInt(dayData[1])
 	temps.push(temp);
 
 	var date = dayData[0];
 	dates.push(date)
 }
-//console.log(dates)
 
 var JSdates = [];
 
-// make arrays with which JS can create JS dates
+// make arrays with date strings
 for ( var i = 0; i < dates.length; i ++){
+	
 	var tempDate = [];
 	
 	// divide string up into yyy/mm/dd
@@ -47,9 +48,7 @@ for ( var i = 0; i < dates.length; i ++){
 	tempDate.push(year, month, day)
 	var tempDate1 = tempDate.join("-")
 	JSdates.push(tempDate1)
-	//console.log(tempDate)
 }
-//console.log(JSdates)
 
 // convert date strings to javascript dates
 var jsDatesUse= [];
@@ -57,27 +56,14 @@ for (var i = 0; i < JSdates.length; i ++){
 	var JSdates1 = new Date(JSdates[i])
 	jsDatesUse.push(JSdates1)
 }
-//console.log(jsDatesUse)
-
-// milliseconds van maken
-// var dateMil = [];
-// for (var i = 0; i < jsDatesUse.length; i ++){
-// 	var d1 = jsDatesUse[i].getTime();
-// 	dateMil.push(d1)
-// }
-// console.log(dateMil)
 
 // find min and max temperature
 var minTemp = Math.min.apply(Math, temps);
-//console.log("min temp:", minTemp)
 var maxTemp = Math.max.apply(Math, temps);
-//console.log("max temp:", maxTemp)
 
 // find earliest and latest date
 var minDate = Math.min.apply(Math, jsDatesUse)
-//console.log("min date:", minDate)
 var maxDate = Math.max.apply(Math, jsDatesUse)
-//console.log("max date:", maxDate)
 
 // initialize canvas
 var canvas = document.getElementById("myCanvas");
@@ -111,20 +97,46 @@ function createTransform(domain, range){
 var yaxis = createTransform(domainTemp, rangeTemp)
 var xaxis = createTransform(domainDate, rangeDate)
 
+// data for drawing graphs
+var amountMonths = 12; 
+var Months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+var rangeY = rangeTemp[1] - rangeTemp[0];
+var amountSteps = (maxTemp - minTemp) / 10;
+var stepsTemp = rangeY / amountSteps;
+var stepsMonth = (rangeDate[1] - rangeDate[0]) / Months.length;
+
 // Graph axis
 ctx.beginPath();
-ctx.moveTo(100, 100);
-ctx.lineTo(100, 480);
-ctx.lineTo(580, 480);
+ctx.moveTo(rangeDate[0], rangeTemp[0]);
+// drawing y axis
+for (var i = 0; i < amountSteps + 1; i ++){
+	
+	var rangeY = 100 + (i * stepsTemp);	
+	var nextTemp = 100 + (i + 1) * stepsTemp;	
+	
+	ctx.fillText(240 - (i * 10), 75, rangeY);
+	ctx.moveTo(100, rangeY);
+	ctx.lineTo(100, nextTemp);
+}
+// drawing x axis
+for (var i = 0; i < Months.length; i ++){
+	
+	var rangeX = 100 + (i * stepsMonth); 
+	var nextMonth = 100 + ((i + 1) * stepsMonth); 
+	
+	ctx.fillText(Months[i], rangeX, 95);
+	ctx.moveTo(rangeX, 100);
+	ctx.lineTo(nextMonth, 100);
+}
 ctx.stroke();
 
 // text in graph
 ctx.font = "24px arial";
-ctx.strokeText("Average temperature deBilt (2017)", 200, 20)
+ctx.strokeText("Average temperature deBilt in 0.1 Celcius (2017)", 200, 20)
 ctx.font = "10px arial"
-ctx.fillText("Average temperature", 0, 10);
+ctx.fillText("Average temperature", 0, 500);
 ctx.font = "10px arial"
-ctx.fillText("Date", 450, 420);
+ctx.fillText("Month", 550, 80);
 
 // Plot graph
 for (var i = 0; i < temps.length; i ++){
@@ -134,7 +146,20 @@ for (var i = 0; i < temps.length; i ++){
 	var firstY = yaxis(temps[i]);
 	var nextY = yaxis(temps[i + 1]);
 	
-	ctx.moveTo(firstX, maxTemp - firstY),
-	ctx.lineTo(nextX, maxTemp - nextY),
+	ctx.moveTo(firstX, rangeTemp[0] + rangeTemp[1] - firstY),
+	ctx.lineTo(nextX, rangeTemp[0] + rangeTemp[1] - nextY),
 	ctx.stroke();
 }
+
+// loading in data from external file
+// var tempTXT = XMLHttpRequest();
+// tempTXT.open("GET"," ", true)
+// tempTXT.onreadystatechange = function() {
+//   if (txtFile.readyState === 4) {  // Makes sure the document is ready to parse.
+//     if (txtFile.status === 200) {  // Makes sure it's found the file.
+//       allText = txtFile.responseText;
+//       lines = txtFile.responseText.split("\n"); // Will separate each line into an array
+//     }
+//   }
+// }
+// txtFile.send(null);
