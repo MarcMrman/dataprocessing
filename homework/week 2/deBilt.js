@@ -4,6 +4,19 @@
 * Drawing a graph with javascript on a webpage
 **/
 
+// loading in data from external file
+// var tempTXT = XMLHttpRequest();
+// tempTXT.open("GET","https://github.com/MarcMrman/dataprocessing/blob/master/homework/week%202/XMLHTTPRequest.txt", true)
+// tempTXT.onreadystatechange = function() {
+//   if (tempTXT.readyState === 4) {  // Makes sure the document is ready to parse.
+//     if (tempTXT.status === 200) {  // Makes sure it's found the file.
+//       allText = tempTXT.responseText;
+//       lines = tempTXT.responseText.split("\n"); // Will separate each line into an array
+//     }
+//   }
+// }
+// tempTXT.send(null);
+
 // retrieve temperature data from html
 var data = document.getElementById("rawdata").innerHTML;
 
@@ -150,16 +163,3 @@ for (var i = 0; i < temps.length; i ++){
 	ctx.lineTo(nextX, rangeTemp[0] + rangeTemp[1] - nextY),
 	ctx.stroke();
 }
-
-// loading in data from external file
-// var tempTXT = XMLHttpRequest();
-// tempTXT.open("GET"," ", true)
-// tempTXT.onreadystatechange = function() {
-//   if (txtFile.readyState === 4) {  // Makes sure the document is ready to parse.
-//     if (txtFile.status === 200) {  // Makes sure it's found the file.
-//       allText = txtFile.responseText;
-//       lines = txtFile.responseText.split("\n"); // Will separate each line into an array
-//     }
-//   }
-// }
-// txtFile.send(null);
