@@ -1,0 +1,33 @@
+h1 {
+	font-size: 15px;
+	font-family: arial;
+	text-align: right;
+}
+
+h2 {
+	font-size: 25px;
+	font-family: arial;
+	text-align: center;
+}
+
+div.bar {
+    display: inline-block;
+    width: 20px;
+    height: 75px;   /* We'll override this later */
+    background-color: black;
+    margin-right: 2px;
+}
+
+svg.rect {
+    display: inline-block;
+    width: 20px;
+    height: 75px;   /* We'll override this later */
+    background-color: blue;
+    margin-right: 2px;
+}
+
+
+/*gewoon eentje printen*/
+/*body {
+	background-image: url("background.jpg");
+}*/

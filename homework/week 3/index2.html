@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	    <meta charset="utf-8">
+        <title>Population growth Canada</title>
+        <script type="text/javascript" src="d3/d3.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="index.css">
+  </head>
+  <body>
+  	<script type="text/javascript">
+	  	
+	  	var body = d3.select("body");
+	  	
+	  	body.append("h1").text("Marc Moorman");
+	  	body.append("h1").text("10769781");
+	  	body.append("h2").text("Canadian population growth 1851-2001")
+
+	  	d3.json("Canadian population 1851-2001.json", function(data) {
+
+        	var dataset = data
+		    
+		    //Width and height
+			var w = 500;
+			var h = 500;
+			var barPadding = 1;
+
+		    //Create SVG element
+			var svg = d3.select("body").append("svg").attr("width", w).attr("height", h);
+			
+			svg.selectAll("rect")
+			   .data(dataset.data).enter().append("rect")
+			   .attr("x", function(d, i) {
+    				return i * (w / 16);
+				})
+			   .attr("y", 0)
+			   // 	function(d) {
+			   // 		return h - dataset.data.population; 
+			   // })
+			   .attr("width", 5)
+			   .attr("height", function (d){
+    		 		console.log(dataset.population)
+    		 		return dataset["population"];
+    		 });	
+
+			 console.log(dataset)
+        });
+  	</script>
+  </body>
+</html>
+
+<!-- // d3.select("body").selectAll("p")
+		    // .data(dataset.data)
+		    // .enter()
+		    // .append("p")
+		    // .text("New paragraph!") -->
+
+	<!-- 	    // d3.select("body").selectAll("div")
+		    // .data(dataset.data)
+		    // .enter()
+		    // .append("div")
+		    // .attr("class", "bar"); -->
+
+		<!--       //     		d3.select("body").selectAll("div")
+		//     .data(dataset.data)  // <-- The answer is here!
+		//     .enter()
+		//     .append("div")
+		//     .attr("class", "bar")
+		//     .style("height", function(d) {
+  //  			 var barHeight = d * 100;  //Scale up by factor of 5
+  //   			return barHeight + "px";
+		// }); -->
