@@ -10,62 +10,115 @@
   	<script type="text/javascript">
 	  	
 	  	var body = d3.select("body");
-	  	
+
 	  	body.append("h1").text("Marc Moorman");
 	  	body.append("h1").text("10769781");
-	  	body.append("h2").text("Canadian population growth 1851-2001")
+	  	body.append("h2").text("Canadian population development 1851-2001")
 
 	  	d3.json("Canadian population 1851-2001.json", function(data) {
 
-        	var dataset = data
-		    
-		    //Width and height
-			var w = 500;
-			var h = 500;
+	  		var dataset = data
+
+	  		var population = [];
+	  		var years = [];
+
+	  		for (var i = 0; i < dataset.data.length; i ++){
+	  			var populationX = dataset.data[i][" population"];
+	  			population.push(populationX);
+
+	  			var yearX = dataset.data[i]["year "];
+	  			years.push(yearX)
+	  		}
+	  		console.log(population)
+	  		//console.log(years)
+
+		    // Width and height
+			var w = 1000;
+			var h = 300;
 			var barPadding = 1;
+			var padding = 10
+
+
+			// MIN EN MAX ZOEKEN
+			// var min = d3.min(population)
+			// console.log(min)
+			// console.log(population[15])
+
+			// var max = d3.max(population)
+			// console.log(max)
+			// console.log(d3.max(population, function(d) { 
+			// 	return d }))
+			
+			// scaling
+			
+			//var x_domain = d3.extent([1851, 2001])
+
+			var scaleX = d3.scale.linear()
+                     	.domain([1851, 2001])
+                     	.range([10, w]);
+
+			var scaleY = d3.scale.linear()
+								.domain([0, population[15]])
+								.range([0, h]);
+
+			// axis
+			var x_axis = d3.svg.axis().scale(scaleX).orient("bottom").ticks(16).tickFormat(function(d){ return d.years;});
+			var y_axis = d3.svg.axis().scale(scaleY).orient("left").ticks(5).tickFormat(function(d){ return d; });
 
 		    //Create SVG element
-			var svg = d3.select("body").append("svg").attr("width", w).attr("height", h);
+			var svg = d3.select("body")
+			            .append("svg")
+			            .attr("width", w)
+			            .attr("height", h);
 			
+			// drawing bars
 			svg.selectAll("rect")
-			   .data(dataset.data).enter().append("rect")
-			   .attr("x", function(d, i) {
-    				return i * (w / 16);
-				})
-			   .attr("y", 0)
-			   // 	function(d) {
-			   // 		return h - dataset.data.population; 
-			   // })
-			   .attr("width", 5)
-			   .attr("height", function (d){
-    		 		console.log(dataset.population)
-    		 		return dataset["population"];
-    		 });	
+			   .data(dataset.data)
+			   .enter()
+			   .append("rect")
+			   .attr("x", function(d, i){
+			   		return i * (w/ (dataset.data.length - barPadding)) + 50
+			   })
+			   .attr("y", function(d, i){
+			   		return h - population[i];
+			   })
+			   .attr("width", 20)
+			   .attr("height", function(d, i){
+			   		return population[i];
+			   })
+			   .attr("fill", "red");
 
-			 console.log(dataset)
+			svg.append("g")
+			    .attr("class", "axis")
+			    .attr("transform", "translate(0," + h + ")")
+			    .call(x_axis);
+
+			svg.append("g")
+				.attr("class", "axis")
+			    .attr("transform", "translate("+ padding + ", 0)")
+			    .call(y_axis);
         });
   	</script>
   </body>
 </html>
 
-<!-- // d3.select("body").selectAll("p")
-		    // .data(dataset.data)
-		    // .enter()
-		    // .append("p")
-		    // .text("New paragraph!") -->
 
-	<!-- 	    // d3.select("body").selectAll("div")
-		    // .data(dataset.data)
-		    // .enter()
-		    // .append("div")
-		    // .attr("class", "bar"); -->
 
-		<!--       //     		d3.select("body").selectAll("div")
-		//     .data(dataset.data)  // <-- The answer is here!
-		//     .enter()
-		//     .append("div")
-		//     .attr("class", "bar")
-		//     .style("height", function(d) {
-  //  			 var barHeight = d * 100;  //Scale up by factor of 5
-  //   			return barHeight + "px";
-		// }); -->
+
+<!-- PROBEREN OM TE DRAAINEN
+ --><!-- 			   
+		svg.selectAll("rect")
+			.data(dataset.data)
+			   .enter()
+			   .append("rect")
+			   .attr("x", function(d, i){
+			   		return i * (w / (dataset.data.length - barPadding))
+			   })
+			   .attr("y", function(d, i){
+			   		return h -( i * population[i])
+			   })
+			   .attr("width", 20)
+			   .attr("height", function(d){
+			   		return population[i]
+			   })
+			   .attr("fill", "red");	    -->

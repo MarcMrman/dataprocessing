@@ -26,6 +26,18 @@ svg.rect {
     margin-right: 2px;
 }
 
+.axis path,
+.axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: arial;
+    font-size: 11px;
+}
+
 
 /*gewoon eentje printen*/
 /*body {
