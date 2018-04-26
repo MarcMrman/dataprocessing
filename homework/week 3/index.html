@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	    <meta charset="utf-8">
+        <title>Population growth Canada</title>
+        <script type="text/javascript" src="d3/d3.min.js"></script>
+        <script type="text/javascript" src="d3/d3-tip.js"></script>
+        <link rel="stylesheet" type="text/css" href="index.css">
+  </head>
+  <body>
+  	<script type="text/javascript">
+	  	
+	  	var body = d3.select("body");
+	  	body.append("h1").text("Marc Moorman");
+	  	body.append("h1").text("10769781");
+	  	body.append("h2").text("Canadian population development 1850-2000")
+
+	  	d3.json("Canadian population 1850-2000.json", function(data) {
+	  		
+	  		// put data in new variable
+	  		var dataset = data
+
+	  		var population = [];
+	  		var years = [];
+
+	  		// put info in seperate arrays
+	  		for (var i = 0; i < dataset.data.length; i ++){
+	  			
+	  			var populationX = dataset.data[i][" population"];
+	  			var yearX = dataset.data[i]["year "];
+	  			population.push(populationX);
+	  			years.push(yearX);
+	  		};
+
+		    // Characteristics for SVG element
+			var w = 1000;
+			var h = 400;
+			var padding = 10;
+			var barPadding = 40;
+			var left_margin = 100;
+			var bottom_margin = 50;
+			var right_margin = 35;
+
+			// MIN EN MAX ZOEKEN
+			// var minPop = d3.min(population)
+			// var max = d3.max(population)
+			var maxDate = d3.max(years)
+			var minDate = d3.min(years)
+
+			// scaling
+			var scaleX = d3.scale.linear()
+                     	.domain([minDate, maxDate])
+                     	.range([left_margin, w - right_margin]);
+
+			var scaleY = d3.scale.linear()
+								.domain([population[15], 0])
+								.range([padding, h - bottom_margin]);
+
+			var x = d3.scale.ordinal()
+    						.rangeRoundBands([0, w], .1);
+
+			var y = d3.scale.linear()
+    						.range([h, 0]);
+
+			// axis
+			var x_axis = d3.svg.axis()
+								.scale(scaleX)
+								.orient("bottom")
+								.ticks(dataset.data.length);
+			
+			var y_axis = d3.svg.axis()
+								.scale(scaleY)
+								.orient("left")
+								.ticks(5);
+
+			// locate info window
+			var tip = d3.tip().attr("class", "d3-tip")
+							.offset([-20, 0]).html(function(d, i) {
+					    		return "<strong>Population:</strong> <span style='color:black'>" + population[i] + "</span>";
+			});
+
+		    //Create SVG element
+			var svg = d3.select("body")
+			            .append("svg")
+			            .attr("width", w)
+			            .attr("height", h);
+
+			// call 3d-tip
+			svg.call(tip);
+			
+			// drawing bars
+			svg.selectAll("rect")
+			   .data(dataset.data)
+			   .enter()
+			   .append("rect")
+			   .attr("class", "rect")
+			   .attr("x", function(d, i){
+			   		return i * ((w - left_margin) / dataset.data.length) + left_margin;
+			   })
+			   .attr("y", function(d, i){
+			   		return h - bottom_margin - (population[i] * 12);
+			   })
+			   .attr("width", (w / dataset.data.length) - barPadding)
+			   .attr("height", function(d, i){
+			   		return population[i] * 12;
+			   })
+			   .on("mouseover", tip.show)
+			   .on("mouseout", tip.hide);
+
+			// drawing x axis
+			svg.append("g")
+			    .attr("class", "axis")
+			    .attr("transform", "translate(0," + (h - bottom_margin) + ")")
+			    .call(x_axis);
+			
+			// x axis label
+ 			svg.append("text") 
+	 			.attr("class", "axisText")            
+			    .attr("transform", "translate(" + ( w / 2) + " ," + h + ")")
+			    .style("text-anchor", "middle")
+			    .text("Year");
+
+			// drawing y axis
+			svg.append("g")
+				.attr("class", "axis")
+			    .attr("transform", "translate(" + left_margin + ", 0)")
+			    .call(y_axis);
+
+			// y axis label
+  			svg.append("text")
+		     	.attr("class", "axisText")
+			    .attr("transform", "rotate(-90)")
+			    .attr("y", 20)
+			    .attr("x", - (h / 2))
+			    .attr("dy", "1em")
+			    .style("text-anchor", "middle")
+			    .text("Population in millions");      
+        });
+  	</script>
+  	<iframe width="0" height="0" src="https://www.youtube.com/embed/zwDvF0NtgdU?autoplay=1"></iframe>
+  </body>
+</html>

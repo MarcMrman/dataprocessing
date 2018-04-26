@@ -10,40 +10,39 @@ h2 {
 	text-align: center;
 }
 
-/*div.bar {
-    display: inline-block;
-    width: 20px;
-    height: 75px;    We'll override this later 
-    background-color: black;
-    margin-right: 2px;
-}
-*/
-svg.rect {
-    display: inline-block;
-    width: 20px;
-    height: 75px;   /* We'll override this later */
-    background-color: blue;
-    margin-right: 2px;
+svg { 
+    /*background-image: url("canadian-flag.jpg");
+    background-size: 1000px 400px;
+    
+   /* background-image: : rgba(0, 0, 0, .1);*/
+   /*opacity: 0.5;*/
 }
 
+/*body {
+    background-image: url("canadian-flag.jpg");
+    background-size: 1247px 524px;
+    opacity: 0.9;
+}*/
+
+/*axis make up*/
 .axis path,
 .axis line {
     fill: none;
     stroke: black;
     shape-rendering: crispEdges;
 }
-
-.axis text {
+.axisText{  
     font-family: arial;
-    font-size: 11px;
+    font-size: 20px;
 }
 
+/*hoovering aspects*/
 .d3-tip {
   line-height: 1;
   font-weight: bold;
   padding: 12px;
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
+  background: rgba(250, 250, 250, 1);
+  color: #000000;
   border-radius: 2px;
 }
 
@@ -67,8 +66,10 @@ svg.rect {
   left: 0;
 }
 
+.rect {
+  fill: yellow;
+}
 
-/*gewoon eentje printen*/
-/*body {
-	background-image: url("background.jpg");
-}*/
+.rect:hover {
+  fill: orangered ;
+}
