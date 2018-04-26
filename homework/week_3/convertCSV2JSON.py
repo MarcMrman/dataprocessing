@@ -5,6 +5,7 @@ import json
 csv_file = "./Canadian population 1850-2000.csv"
 json_file = "Canadian population 1850-2000.json"
 
+# open csv file
 with open(csv_file, "r") as infile:
   reader = csv.DictReader(infile)
   csv_list = list(reader)
@@ -13,6 +14,6 @@ with open(csv_file, "r") as infile:
 data = {}
 data.update(dict(data=csv_list))
 
-# write data into json TERUG IN DICT ZETTEN, NIET ZO HARDCODEN
+# write data into json
 with open (json_file, 'w') as outfile:
    json.dump(data, outfile)

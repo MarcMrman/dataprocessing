@@ -9,17 +9,15 @@
   </head>
   <body>
   	<script type="text/javascript">
-	  	
+	  	// d3 text
 	  	var body = d3.select("body");
 	  	body.append("h1").text("Marc Moorman");
 	  	body.append("h1").text("10769781");
-	  	body.append("h2").text("Canadian population development 1850-2000")
+	  	body.append("h2").text("Canadian population development over 150 years")
 	  	body.append("p")
 	  		.text("This bar char shows the growth of the amount of inhabitants in Canada in millions. The data is is given per then years.")
-
-	  	body.append("p")
-	  		.text("The data is found on https:vincentarelbundock.github.io/Rdatasets/datasets.html")
-
+	  	body.append("p").text("The data source can be found if you click here").on("click", function(){window.open("https:vincentarelbundock.github.io/Rdatasets/datasets.html")});
+	  	
 	  	d3.json("Canadian population 1850-2000.json", function(data) {
 	  		
 	  		// put data in new variable
@@ -46,13 +44,11 @@
 			var bottom_margin = 50;
 			var right_margin = 35;
 
-			// MIN EN MAX ZOEKEN
-			// var minPop = d3.min(population)
-			// var max = d3.max(population)
+			// min and max dates
 			var maxDate = d3.max(years)
 			var minDate = d3.min(years)
 
-			// scaling
+			// scales for the axis
 			var scaleX = d3.scale.linear()
                      	.domain([minDate, maxDate])
                      	.range([left_margin, w - right_margin]);
@@ -61,13 +57,7 @@
 								.domain([population[15], 0])
 								.range([padding, h - bottom_margin]);
 
-			var x = d3.scale.ordinal()
-    						.rangeRoundBands([0, w], .1);
-
-			var y = d3.scale.linear()
-    						.range([h, 0]);
-
-			// axis
+			// axis characteristics
 			var x_axis = d3.svg.axis()
 								.scale(scaleX)
 								.orient("bottom")
@@ -78,7 +68,7 @@
 								.orient("left")
 								.ticks(5);
 
-			// locate info window
+			// location info window
 			var tip = d3.tip().attr("class", "d3-tip")
 							.offset([-20, 0]).html(function(d, i) {
 					    		return "<strong>Population:</strong> <span style='color:black'>" + population[i] + "</span>";
@@ -90,10 +80,10 @@
 			            .attr("width", w)
 			            .attr("height", h);
 
-			// call 3d-tip
+			// call 3d-tip function
 			svg.call(tip);
 			
-			// drawing bars
+			// drawing bar chart bars
 			svg.selectAll("rect")
 			   .data(dataset.data)
 			   .enter()

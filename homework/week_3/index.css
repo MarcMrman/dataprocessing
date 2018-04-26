@@ -1,3 +1,4 @@
+/* html text make up */
 h1 {
 	font-size: 15px;
 	font-family: arial;
@@ -14,15 +15,10 @@ p {
     font-family: arial;
     font-size: 15px;
 }
+
 svg { 
     background-image: url("background.png");
     background-size: 1000px 400px;
-}
-
-/*body {
-    background-image: url("canadian-flag.jpg");
-    background-size: 1247px 524px;
-    opacity: 0.9;
 }
 
 /*axis make up*/
@@ -67,6 +63,7 @@ svg {
   left: 0;
 }
 
+/* bar colors */
 .rect {
   fill: goldenrod;
 }
