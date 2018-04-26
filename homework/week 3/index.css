@@ -10,19 +10,20 @@ h2 {
 	text-align: center;
 }
 
+p {
+    font-family: arial;
+    font-size: 15px;
+}
 svg { 
-    /*background-image: url("canadian-flag.jpg");
+    background-image: url("background.png");
     background-size: 1000px 400px;
-    
-   /* background-image: : rgba(0, 0, 0, .1);*/
-   /*opacity: 0.5;*/
 }
 
 /*body {
     background-image: url("canadian-flag.jpg");
     background-size: 1247px 524px;
     opacity: 0.9;
-}*/
+}
 
 /*axis make up*/
 .axis path,
@@ -67,9 +68,9 @@ svg {
 }
 
 .rect {
-  fill: yellow;
+  fill: goldenrod;
 }
 
 .rect:hover {
-  fill: orangered ;
+  fill: lightsteelblue ;
 }

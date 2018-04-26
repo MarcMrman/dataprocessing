@@ -14,6 +14,11 @@
 	  	body.append("h1").text("Marc Moorman");
 	  	body.append("h1").text("10769781");
 	  	body.append("h2").text("Canadian population development 1850-2000")
+	  	body.append("p")
+	  		.text("This bar char shows the growth of the amount of inhabitants in Canada in millions. The data is is given per then years.")
+
+	  	body.append("p")
+	  		.text("The data is found on https:vincentarelbundock.github.io/Rdatasets/datasets.html")
 
 	  	d3.json("Canadian population 1850-2000.json", function(data) {
 	  		
