@@ -22,7 +22,7 @@ window.onload = function() {
 	  
 	  // writing JSON
 	  else 
-	  	// KAN NOG IN FOR LOOP
+	  	// parsing api data
 	  	var gdpJSON = JSON.parse(response[0].responseText);
 	  	//console.log("GDP JSON:", gdpJSON)
 	  	var wageJSON = JSON.parse(response[1].responseText);
@@ -61,19 +61,7 @@ window.onload = function() {
 	  	};
 	  	// console.log("hours:", hours_PY)
 	  	// console.log("gdp:", gdp_PY)
-	  	// console.log("wage:", wage_PY)
-
-	  	// LANDEN SORTEREN EN JUISTE DINGEN BIJ ELKAAR
-	  	// var gdpCountrySort = [];
-	  	// for (var j = 0; j < 18; j ++){
-	  	// 	gdpCountrySort.push(countryCodeGDP[j])
-	  	// 	gdpCountrySort.push(gdp_PY[i])
-	  	// 	for (var i = 0; i < 10; i ++){
-	  	// 		gdpCountrySort.push(gdp_PY[i])
-	  	// 	}
-	  	// }
-	  	// console.log(gdpCountrySort)
-	  	
+	  	// console.log("wage:", wage_PY)	  	
 
 	  	// lijsten samenvoegen om zo coordinaten te krijgen
 	  	//console.log("gdp:", gdp_PY[0][0])
@@ -280,3 +268,15 @@ window.onload = function() {
 
 	// function addLegend etc.
 };
+
+
+	  	// LANDEN SORTEREN EN JUISTE DINGEN BIJ ELKAAR
+	  	// var gdpCountrySort = [];
+	  	// for (var j = 0; j < 18; j ++){
+	  	// 	gdpCountrySort.push(countryCodeGDP[j])
+	  	// 	gdpCountrySort.push(gdp_PY[i])
+	  	// 	for (var i = 0; i < 10; i ++){
+	  	// 		gdpCountrySort.push(gdp_PY[i])
+	  	// 	}
+	  	// }
+	  	// console.log(gdpCountrySort)
