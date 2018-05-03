@@ -5,7 +5,7 @@
 import csv
 import json
 
-# local file path, MOET DIT ZO VAN INTERNET AFGEHAALD WORDEN?
+# local file path
 csv_file = "./Canadian population 1850-2000.csv"
 json_file = "Canadian population 1850-2000.json"
 
