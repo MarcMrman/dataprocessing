@@ -4,17 +4,15 @@
 // function that is triggered when page is loaded
 window.onload = function() {
 
-	//console.log('Yes, you can!')
-
 	// using api's to retrieve data
 	var GDP = "http://stats.oecd.org/SDMX-JSON/data/PDB_LV/AUS+BEL+EST+FRA+GRC+HUN+IRL+JPN+LVA+LUX+NLD+NZL+POL+PRT+SVN+ESP+GBR+LTU.T_GDPPOP.VPVOB/all?startTime=2004&endTime=2013&dimensionAtObservation=allDimensions"
-	//var realMinWage = "http://stats.oecd.org/SDMX-JSON/data/RMW/AUS+BEL+EST+FRA+GRC+HUN+IRL+JPN+LVA+LUX+NLD+NZL+POL+PRT+SVN+ESP+GBR+LTU.PPP.A/all?startTime=2004&endTime=2013&dimensionAtObservation=allDimensions";
+	var realMinWage = "http://stats.oecd.org/SDMX-JSON/data/RMW/AUS+BEL+EST+FRA+GRC+HUN+IRL+JPN+LVA+LUX+NLD+NZL+POL+PRT+SVN+ESP+GBR+LTU.PPP.A/all?startTime=2004&endTime=2013&dimensionAtObservation=allDimensions";
 	var hoursWorkedAnnually = "http://stats.oecd.org/SDMX-JSON/data/ANHRS/AUS+BEL+EST+FRA+GRC+HUN+IRL+JPN+LVA+LUX+NLD+NZL+POL+PRT+SVN+ESP+GBR+LTU.TE.A/all?startTime=2004&endTime=2013&dimensionAtObservation=allDimensions"
 
 	// queuing steps to do before drawing plot
 	d3.queue()
 	  .defer(d3.request, GDP)
-	  //.defer(d3.request, realMinWage)
+	  .defer(d3.request, realMinWage)
 	  .defer(d3.request, hoursWorkedAnnually)
 	  .awaitAll(loadingPage);
 
@@ -27,13 +25,13 @@ window.onload = function() {
 	  	// KAN NOG IN FOR LOOP
 	  	var gdpJSON = JSON.parse(response[0].responseText);
 	  	//console.log("GDP JSON:", gdpJSON)
-	  	//var wageJSON = JSON.parse(response[1].responseText);
-	  	//console.log(wageJSON)
-	  	var hoursJSON = JSON.parse(response[1].responseText);
+	  	var wageJSON = JSON.parse(response[1].responseText);
+	  	//console.log("Wage:", wageJSON)
+	  	var hoursJSON = JSON.parse(response[2].responseText);
 	  	//console.log("HOURS:", hoursJSON)
 
 	  	// putting info in seperate arrays per year
-	  	//var wage_PY = [];
+	  	var wage_PY = [];
 	  	var gdp_PY = [];
 	  	var hours_PY = [];
 	  	for (var j = 0; j < 10; j ++){
@@ -44,24 +42,26 @@ window.onload = function() {
 	  		//var countryCodeGDP = [];
 	  		//var countryCodeWage = [];
 	  		
+	  		// putting info in arrays per country
 	  		for (var i = 0; i < 18; i ++){
 	  			//countryCodeGDP.push(gdpJSON.structure.dimensions.observation[0].values[i].name)
 	  			//countryCodeWage.push(wageJSON.structure.dimensions.observation[0].values[i].name)
 	  			yearlyGDP.push(gdpJSON.dataSets[0].observations[i + ":0:0:" + j][0]);
-	  			//yearlyWage.push(wageJSON.dataSets[0].observations[i + ":" + j +":0:0"][0]);
+	  			yearlyWage.push(wageJSON.dataSets[0].observations[i + ":" + j +":0:0"][0]);
 	  			yearlyHRS.push(hoursJSON.dataSets[0].observations[i + ":" + j +":0:0"][0]);
 	  		};
 	  		
-	  		console.log(yearlyHRS)
-	  		console.log(yearlyGDP)
+	  		//console.log(yearlyHRS)
+	  		//console.log(yearlyGDP)
+	  		//console.log(yearlyWage)
 
 	  		hours_PY.push(yearlyHRS)
 	  		gdp_PY.push(yearlyGDP)
-	  		//wage_PY.push(yearlyWage)
+	  		wage_PY.push(yearlyWage)
 	  	};
-	  	console.log("hours:", hours_PY)
-	  	console.log("gdp:", gdp_PY)
-	  	//console.log("wage:", wage_PY)
+	  	// console.log("hours:", hours_PY)
+	  	// console.log("gdp:", gdp_PY)
+	  	// console.log("wage:", wage_PY)
 
 	  	// LANDEN SORTEREN EN JUISTE DINGEN BIJ ELKAAR
 	  	// var gdpCountrySort = [];
@@ -80,17 +80,22 @@ window.onload = function() {
 	  	//console.log("wage:", wage_PY[0][0])
 
 	  	// creating lists with datapoints as coordinates
-	  	var dataset = [];
+	  	var datasetHrs = [];
+	  	var datasetWage = [];
 	  	for (var i = 0; i < gdp_PY[0].length; i ++){
+	  		var x_yGdpHrs = [];
 	  		var x_yGdpWage = [];
+	  		x_yGdpHrs.push(gdp_PY[0][i])
+	  		x_yGdpHrs.push(hours_PY[0][i])
+	  		datasetHrs.push(x_yGdpHrs)
 	  		x_yGdpWage.push(gdp_PY[0][i])
-	  		//x_yGdpWage.push(wage_PY[0][i])
-	  		x_yGdpWage.push(hours_PY[0][i])
-	  		dataset.push(x_yGdpWage)
+	  		x_yGdpWage.push(wage_PY[0][i])
+	  		datasetWage.push(x_yGdpWage)
 	  	};
-	  	console.log("dataset:", dataset)
+	  	console.log("datasetHrs:", datasetHrs)
+	  	console.log("datasetWage:", datasetWage)
 
-	  	//Create SVG element
+	  	// set svg charactersitics
 	  	var w = 1000
 	  	var h = 500
 	  	var leftMargin = 100
@@ -99,14 +104,11 @@ window.onload = function() {
 	  	var topMargin = 50
 	  	var bottomMargin = 100
 	  	
-	  	// min and max values
+	  	// max values for axis
   		var maxX_Value = Math.max.apply(Math, hours_PY[0]);
-  		//var minX_Value = Math.min.apply(Math, wage_PY[0]);
   		var max_GDP = Math.max.apply(Math, gdp_PY[0]);
   		//var min_GDP = Math.min.apply(Math, gdp_PY[0]);
-  		// console.log("min gdp:", min_GDP)
   		// console.log("max gdp:", max_GDP)
-  		// console.log("min x value:", minX_Value)
   		// console.log("max x value:", maxX_Value)
 
 	  	// x axis characteristics
@@ -115,9 +117,7 @@ window.onload = function() {
 	  		.range([leftMargin, w - rightMargin])
 		
 		var x_axis = d3.axisBottom()
-			.scale(scaleX);
-			//.ticks(5);
-			// .ticks(gdp_PY[0].length);	    
+			.scale(scaleX);	    
 
 		// y axis characteristics
 		var scaleY = d3.scaleLinear()
@@ -134,13 +134,11 @@ window.onload = function() {
             .attr("width", w)
             .attr("height", h);
 
-        // location info window MEER INFO WEERGEVEN
+        // creating info window
         var tip = d3.tip()
       				.attr("class", "d3-tip")
 				    .offset([-20, 0]).html(function(d, i) {
 		 	    		return "<strong>Country:</strong> <span style='color:black'>" + gdpJSON.structure.dimensions.observation[0].values[i].name + "</span>" });
-		 	    		// {return	"<strong>GDP:</strong> <span style='color:black'>" +  + "</span>" "</br>"}
-		 	    		// {return	"<strong>Hours worked annually:</strong> <span style='color:black'>" +  + "</span>"}});
 		svg.call(tip);
 
         // creating circles
@@ -150,18 +148,18 @@ window.onload = function() {
 		   .append("circle")
 		   .attr("class", "circle")
 		   .attr("cx", function(d, i){
-		   		return scaleX(dataset[i][1]);
+		   		return scaleX(datasetHrs[i][1]);
 		   })
    			.attr("cy", function(d, i){
-		   		return scaleY(dataset[i][0]);
+		   		return scaleY(datasetHrs[i][0]);
 		   	})
    			.attr("r", function(d, i){
-   				return (dataset[i][0] / dataset[i][1]) / 2;
+   				return (datasetHrs[i][0] / datasetHrs[i][1]) / 2;
    			})
    			.attr("fill", function(d, i){
    				// GDP / hour worked ratio
-   				if (dataset[i][0] / dataset[i][1] > dataset[0][0] / dataset[0][1]) {return "#c51b8a"}
-   				else if (dataset[i][0] / dataset[i][1] < dataset[0][0] / dataset[0][1]) {return "#fa9fb5"}
+   				if (datasetHrs[i][0] / datasetHrs[i][1] > datasetHrs[0][0] / datasetHrs[0][1]) {return "#c51b8a"}
+   				else if (datasetHrs[i][0] / datasetHrs[i][1] < datasetHrs[0][0] / datasetHrs[0][1]) {return "#fa9fb5"}
    				else {return "#000000"}
    			})
    			.on("mouseover", tip.show)
@@ -216,13 +214,13 @@ window.onload = function() {
 		      	else {return "#000000"}
 		      });
 
+		// adding text in legend
 		svg.append("text")
 			.attr("x", w - 100)
 		    .attr("y", h - h + 100 - (3 * 30))
 		    .attr("dy", ".35em")
 		    .style("text-anchor", "end")
 		    .text("GDP/Hour worked ratio (Australia as benchmark):");
-
 
 		svg.append("text")
 			.attr("x", w - 100)
@@ -244,22 +242,13 @@ window.onload = function() {
 		    .attr("dy", ".35em")
 		    .style("text-anchor", "end")
 		    .text("Equal");
-
-
-		// legend.append("text")
-		//       .attr("x", w - 110)
-		//       .attr("y", function(d, i){
-		//       		return h - 200 - (i * 10);
-		//       	})
-		//       .attr("dy", ".35em")
-		//       .style("text-anchor", "end")
-		//       .text(function(d){
-		//       	if (h - h + 50 - (i * 10) == 50 ) {return "Higher GDP/Hour worked ratio than Australia"}
-		//       	else if (h - h + 50 - (i * 10) == 60) {return "Lower GDP/Hour worked ratio than Australia"}
-		//       	else {return "Equal GDP/Hour ratio to Australia"}
-		//       });
-
 		
+		// function to update data when clicked on button
+		function updateData(){
+
+		}
+
+
 		//On click, update with new data			
 		// d3.selectAll(".m")
 		// 	.on("click", function() {
