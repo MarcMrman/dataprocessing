@@ -6,9 +6,9 @@
 window.onload = function() {
 
 	// using api's to retrieve data
-	var GDP = "http://stats.oecd.org/SDMX-JSON/data/PDB_LV/AUS+BEL+EST+FRA+GRC+HUN+IRL+JPN+LVA+LUX+NLD+NZL+POL+PRT+SVN+ESP+GBR+LTU.T_GDPPOP.VPVOB/all?startTime=2004&endTime=2013&dimensionAtObservation=allDimensions"
-	var realMinWage = "http://stats.oecd.org/SDMX-JSON/data/RMW/AUS+BEL+EST+FRA+GRC+HUN+IRL+JPN+LVA+LUX+NLD+NZL+POL+PRT+SVN+ESP+GBR+LTU.PPP.A/all?startTime=2004&endTime=2013&dimensionAtObservation=allDimensions";
-	var hoursWorkedAnnually = "http://stats.oecd.org/SDMX-JSON/data/ANHRS/AUS+BEL+EST+FRA+GRC+HUN+IRL+JPN+LVA+LUX+NLD+NZL+POL+PRT+SVN+ESP+GBR+LTU.TE.A/all?startTime=2004&endTime=2013&dimensionAtObservation=allDimensions"
+	var GDP = "https://stats.oecd.org/SDMX-JSON/data/PDB_LV/AUS+BEL+EST+FRA+GRC+HUN+IRL+JPN+LVA+LUX+NLD+NZL+POL+PRT+SVN+ESP+GBR+LTU.T_GDPPOP.VPVOB/all?startTime=2004&endTime=2013&dimensionAtObservation=allDimensions"
+	var realMinWage = "https://stats.oecd.org/SDMX-JSON/data/RMW/AUS+BEL+EST+FRA+GRC+HUN+IRL+JPN+LVA+LUX+NLD+NZL+POL+PRT+SVN+ESP+GBR+LTU.PPP.A/all?startTime=2004&endTime=2013&dimensionAtObservation=allDimensions";
+	var hoursWorkedAnnually = "https://stats.oecd.org/SDMX-JSON/data/ANHRS/AUS+BEL+EST+FRA+GRC+HUN+IRL+JPN+LVA+LUX+NLD+NZL+POL+PRT+SVN+ESP+GBR+LTU.TE.A/all?startTime=2004&endTime=2013&dimensionAtObservation=allDimensions"
 
 	// queuing steps to do before drawing plot
 	d3.queue()
