@@ -16,16 +16,16 @@ window.onload = function() {
 	  .defer(d3.request, realMinWage)
 	  .defer(d3.request, hoursWorkedAnnually)
 	  .awaitAll(loadingPage);
+
+	// response to request
+	function loadingPage(error, response) {
+	  if (error) throw error;
+	  
+	  getData(response[0].responseText, response[1].responseText, response[2].responseText)
+
+	};
 };
-
-// response to request
-function loadingPage(error, response) {
-  if (error) throw error;
-  
-  getData(response[0].responseText, response[1].responseText, response[2].responseText)
-
-};
-
+		
 // function to parse data into JSON and give data through to makeScatter function
 function getData(data, data1, data2){
 	
