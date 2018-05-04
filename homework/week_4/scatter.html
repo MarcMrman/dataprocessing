@@ -6,7 +6,7 @@
 	<!-- loading libraries -->
 	<script src="https://d3js.org/d3.v4.min.js"></script>
 	<script type="text/javascript" src="./d3/d3-tip.js"></script>
-	<script type="text/javascript" src="testscatter.js"></script>
+	<script type="text/javascript" src="scatter.js"></script>
 	<link rel="stylesheet" href="scatter.css">
 	<title>Scatterplot</title>
 </head>
@@ -23,14 +23,11 @@
 
 	<p class="explanation"> The gross domestic product is an economical measurefor all products and services produced in a certain matter of time. This measure includes inflation rates and the cost of living in a country. This economical measure is put up against the average hours worked in a year per person in that country. Using these two variables I created a ratio, to see which countries get most GDP out of one hour worked.</p>
 	
-	<!-- Here I have tried to create buttons to switch inbetween variables, Hours worked annually/Real minimum wage. However I did not succeed in creating the function to update my data so I commented the buttons out of my code. I wanted to make "value" decisive in what data would be shown in the function "makeScatter"  -->
-<!-- 	<div class="dropdown"> 
-		<button class="dropbtn"> Subject </button>
-		<div class="dropdown-content"> 
-			<button class="dropdown-item" type="button" value="Hours" onclick="makeScatter()""> Hours worked annually </button>
-			<button class="dropdown-item" type="button" value="Wage" onclick="makeScatter()""> Real minimum wage </button>
-		</div>
-	</div> -->	
+	<!-- Here I have tried to create buttons to switch inbetween variables, Hours worked annually/Real minimum wage. However I did not succeed in creating the function to update my data so I commented the buttons out of my code. I wanted to make "value" decisive in what data would be shown in the function "makeScatter"  So I am aware this does not work-->
+	<div class="dropdown-content"> 
+		<button class="m" type="button" value="Hours" onclick="makeScatter()""> Hours worked annually </button>
+		<button class="m" type="button" value="Wage" onclick="makeScatter()""> Real minimum wage </button>
+	</div>
 
 </body>
 </html>

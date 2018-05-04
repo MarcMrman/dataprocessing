@@ -1,6 +1,5 @@
 // Marc Moorman
 // 10769781
-// program that draws a scatter plot
 
 // function that is triggered when page is loaded
 window.onload = function() {
@@ -17,23 +16,19 @@ window.onload = function() {
 	  .defer(d3.request, hoursWorkedAnnually)
 	  .awaitAll(loadingPage);
 
-	// response to request
+	// responding to request
 	function loadingPage(error, response) {
 	  if (error) throw error;
 	  
+	  // writing JSON
 	  else 
-	  	
-	  	getData(response[0].responseText, response[1].responseText, response[2].responseText)
-
-	};
-
-	// function to parse data into JSON and give data through to makeScatter function
-	function getData(data, data1, data2){
-		
-		// parsing api data
-	  	var gdpJSON = JSON.parse(data);
-	  	var wageJSON = JSON.parse(data1);
-	  	var hoursJSON = JSON.parse(data2);
+	  	// parsing api data
+	  	var gdpJSON = JSON.parse(response[0].responseText);
+	  	//console.log("GDP JSON:", gdpJSON)
+	  	var wageJSON = JSON.parse(response[1].responseText);
+	  	//console.log("Wage:", wageJSON)
+	  	var hoursJSON = JSON.parse(response[2].responseText);
+	  	//console.log("HOURS:", hoursJSON)
 
 	  	// putting info in seperate arrays per year
 	  	var wage_PY = [];
@@ -44,72 +39,67 @@ window.onload = function() {
 	  		var yearlyGDP = [];
 	  		var yearlyWage = [];
 	  		var yearlyHRS = [];
+	  		//var countryCodeGDP = [];
+	  		//var countryCodeWage = [];
 	  		
 	  		// putting info in arrays per country
 	  		for (var i = 0; i < 18; i ++){
-
+	  			//countryCodeGDP.push(gdpJSON.structure.dimensions.observation[0].values[i].name)
+	  			//countryCodeWage.push(wageJSON.structure.dimensions.observation[0].values[i].name)
 	  			yearlyGDP.push(gdpJSON.dataSets[0].observations[i + ":0:0:" + j][0]);
 	  			yearlyWage.push(wageJSON.dataSets[0].observations[i + ":" + j +":0:0"][0]);
 	  			yearlyHRS.push(hoursJSON.dataSets[0].observations[i + ":" + j +":0:0"][0]);
 	  		};
+	  		
+	  		//console.log(yearlyHRS)
+	  		//console.log(yearlyGDP)
+	  		//console.log(yearlyWage)
 
 	  		hours_PY.push(yearlyHRS)
 	  		gdp_PY.push(yearlyGDP)
 	  		wage_PY.push(yearlyWage)
 	  	};
+	  	// console.log("hours:", hours_PY)
+	  	// console.log("gdp:", gdp_PY)
+	  	// console.log("wage:", wage_PY)	  	
 
-		  	// creating lists with datapoints as coordinates
-		  	var datasetHrs = [];
-		  	var datasetWage = [];
-		  	for (var i = 0; i < gdp_PY[0].length; i ++){
-		  		
-		  		var x_yGdpHrs = [];
-		  		var x_yGdpWage = [];
-		  		x_yGdpHrs.push(gdp_PY[0][i])
-		  		x_yGdpHrs.push(hours_PY[0][i])
-		  		datasetHrs.push(x_yGdpHrs)
-		  		x_yGdpWage.push(gdp_PY[0][i])
-		  		x_yGdpWage.push(wage_PY[0][i])
-		  		datasetWage.push(x_yGdpWage)
-		  	};
+	  	// lijsten samenvoegen om zo coordinaten te krijgen
+	  	//console.log("gdp:", gdp_PY[0][0])
+	  	//console.log("wage:", wage_PY[0][0])
 
-		  	makeScatter(datasetHrs, datasetWage, hours_PY, gdp_PY, wage_PY, gdpJSON, )
-	}
+	  	// creating lists with datapoints as coordinates
+	  	var datasetHrs = [];
+	  	var datasetWage = [];
+	  	for (var i = 0; i < gdp_PY[0].length; i ++){
+	  		var x_yGdpHrs = [];
+	  		var x_yGdpWage = [];
+	  		x_yGdpHrs.push(gdp_PY[0][i])
+	  		x_yGdpHrs.push(hours_PY[0][i])
+	  		datasetHrs.push(x_yGdpHrs)
+	  		x_yGdpWage.push(gdp_PY[0][i])
+	  		x_yGdpWage.push(wage_PY[0][i])
+	  		datasetWage.push(x_yGdpWage)
+	  	};
+	  	console.log("datasetHrs:", datasetHrs)
+	  	console.log("datasetWage:", datasetWage)
 
-	// function to draw a scatterplot
-	function makeScatter(datasetHrs, datasetWage, hours, gdp, wage, gdpJSON){
-		
-		// set svg charactersitics
+	  	// set svg charactersitics
 	  	var w = 1000
 	  	var h = 500
 	  	var leftMargin = 100
 	  	var rightMargin = 200
 	  	var padding = 10;
 	  	var topMargin = 50
-	  	var bottomMargin = 75
-
-		// My idea was to have an initial dataset loaden
-		// and when another button was pressed ("onclick") the scatter would be made again
-		// but then with the new data. 	  	
-
-		// data loaden initially
-		var variable = datasetHrs; 
-		
-		d3.selectAll(".m")
-			.on("click", function() {
-				var subject = this.getAttribute("value");
-
-				if(subject == "Wage"){
-					variable = datasetWage;}
-				else{
-					variable = datasetHrs;}
-				});
+	  	var bottomMargin = 100
 	  	
 	  	// max values for axis
-  		var maxX_Value = Math.max.apply(Math, hours[0]);
-  		var max_GDP = Math.max.apply(Math, gdp[0]);
+  		var maxX_Value = Math.max.apply(Math, hours_PY[0]);
+  		var max_GDP = Math.max.apply(Math, gdp_PY[0]);
+  		//var min_GDP = Math.min.apply(Math, gdp_PY[0]);
+  		// console.log("max gdp:", max_GDP)
+  		// console.log("max x value:", maxX_Value)
 
-  		// x axis characteristics
+	  	// x axis characteristics
 	  	var scaleX = d3.scaleLinear()
 	  		.domain([0, maxX_Value * 1.06])
 	  		.range([leftMargin, w - rightMargin])
@@ -131,7 +121,7 @@ window.onload = function() {
             .append("svg")
             .attr("width", w)
             .attr("height", h);
-        
+
         // creating info window
         var tip = d3.tip()
       				.attr("class", "d3-tip")
@@ -141,24 +131,23 @@ window.onload = function() {
 
         // creating circles
         svg.selectAll("circle")
-		   .data(gdp[0])
+		   .data(gdp_PY[0])
 		   .enter()
 		   .append("circle")
 		   .attr("class", "circle")
 		   .attr("cx", function(d, i){
-		   		return scaleX(variable[i][1]);
+		   		return scaleX(datasetHrs[i][1]);
 		   })
    			.attr("cy", function(d, i){
-		   		return scaleY(variable[i][0]);
+		   		return scaleY(datasetHrs[i][0]);
 		   	})
    			.attr("r", function(d, i){
-   				return (variable[i][0] / variable[i][1]) / 2;
+   				return (datasetHrs[i][0] / datasetHrs[i][1]) / 2;
    			})
    			.attr("fill", function(d, i){
-   				
    				// GDP / hour worked ratio
-   				if (variable[i][0] / variable[i][1] > variable[0][0] / variable[0][1]) {return "#c51b8a"}
-   				else if (variable[i][0] / variable[i][1] < variable[0][0] / variable[0][1]) {return "#fa9fb5"}
+   				if (datasetHrs[i][0] / datasetHrs[i][1] > datasetHrs[0][0] / datasetHrs[0][1]) {return "#c51b8a"}
+   				else if (datasetHrs[i][0] / datasetHrs[i][1] < datasetHrs[0][0] / datasetHrs[0][1]) {return "#fa9fb5"}
    				else {return "#000000"}
    			})
    			.on("mouseover", tip.show)
@@ -179,7 +168,7 @@ window.onload = function() {
 		// x axis label
 		svg.append("text") 
 			.attr("class", "axisText")            
-	    	.attr("transform", "translate(" + ( w / 2) + " ," + (h - (padding * 2)) + ")")
+	    	.attr("transform", "translate(" + ( w / 2) + " ," + (h - (padding * 5)) + ")")
 	    	.style("text-anchor", "middle")
 	    	.text("Average hours worked (annually per person)");
 
@@ -193,13 +182,7 @@ window.onload = function() {
 		    .style("text-anchor", "middle")
 		    .text("GDP (in millions)");
 
-		addLegend(svg, w, h)
-	}
-
-	// function to draw a legend into SVG element
-	function addLegend(svg, w, h){
-		
-		// adding legend (colors chosen using color brewer color blind friendly)
+  		// adding legend (colors chosen using color brewer color blind friendly)
 		var legend = svg.selectAll("legend")
 		var three = [1, 2, 3];
 		legend.append("rect")
@@ -247,5 +230,53 @@ window.onload = function() {
 		    .attr("dy", ".35em")
 		    .style("text-anchor", "end")
 		    .text("Equal");
-	}
+		
+		// function to update data when clicked on button
+		function updateData(){
+
+		}
+
+
+		//On click, update with new data			
+		// d3.selectAll(".m")
+		// 	.on("click", function() {
+		// 		var year = this.getAttribute("value");
+
+		// 		var str;
+		// 		if(year == "2004"){
+		// 			str = "2004.json";
+		// 		}else if (year == "2003"){
+		// 			str = "2003.json";}
+				// }else if(date == "2014-02-21"){
+				// 	str = "21.json";
+				// }else if(date == "2014-02-22"){
+				// 	str = "22.json";
+				// }else{
+				// 	str = "23.json";
+				// }
+
+
+
+		svg.select(".title")
+			.text("Number of messages per hour on " + date + ".");
+	};
+
+	// function getData() --> deze in window.onload uit laten voeren
+	// alle functies er buiten definieren
+
+	// function makeScater
+
+	// function addLegend etc.
 };
+
+
+	  	// LANDEN SORTEREN EN JUISTE DINGEN BIJ ELKAAR
+	  	// var gdpCountrySort = [];
+	  	// for (var j = 0; j < 18; j ++){
+	  	// 	gdpCountrySort.push(countryCodeGDP[j])
+	  	// 	gdpCountrySort.push(gdp_PY[i])
+	  	// 	for (var i = 0; i < 10; i ++){
+	  	// 		gdpCountrySort.push(gdp_PY[i])
+	  	// 	}
+	  	// }
+	  	// console.log(gdpCountrySort)
