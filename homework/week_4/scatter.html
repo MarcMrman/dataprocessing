@@ -23,10 +23,12 @@
 
 	<p class="explanation"> The gross domestic product is an economical measurefor all products and services produced in a certain matter of time. This measure includes inflation rates and the cost of living in a country. This economical measure is put up against the average hours worked in a year per person in that country. Using these two variables I created a ratio, to see which countries get most GDP out of one hour worked.</p>
 	
-	<!-- Here I have tried to create buttons to switch inbetween variables, Hours worked annually/Real minimum wage. However I did not succeed in creating the function to update my data so I commented the buttons out of my code. I wanted to make "value" decisive in what data would be shown in the function "makeScatter"  So I am aware this does not work-->
+	<!-- menu with variables -->
 	<div class="dropdown-content"> 
-		<button class="m" type="button" value="Hours" onclick="makeScatter()""> Hours worked annually </button>
-		<button class="m" type="button" value="Wage" onclick="makeScatter()""> Real minimum wage </button>
+		<p class="explanation"> Choose your subject:</p>
+		<button class="m" id="Wage" type="button" value="Wage" onclick="makeScatter()""> Real minimum wage </button>
+		<button class="m" id="Hours" type="button" value="Hours" onclick="makeScatter()""> Hours worked annually </button>
+		
 	</div>
 
 </body>
