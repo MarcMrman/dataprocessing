@@ -3,44 +3,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<!-- loading external files -->
+	<!-- loading libraries -->
 	<script src="https://d3js.org/d3.v4.min.js"></script>
-	<script type="text/javascript" src="d3/d3-tip.js"></script>
-	<script type="text/javascript" src="scatter.js"></script>
+	<script type="text/javascript" src="./d3/d3-tip.js"></script>
+	<script type="text/javascript" src="testscatter.js"></script>
 	<link rel="stylesheet" href="scatter.css">
 	<title>Scatterplot</title>
 </head>
 <body>
 	<h1> Marc Moorman </br>
-	10769781 </h1>
-	<h2> GDP (in millions) and average hours worked annually from 2004-2013</h2>
-	<div class="dropdown"> 
-		<button class="dropbtn"> Subject </button>
-		<div class="dropdown-content"> 
-			<button class="dropdown-item" type="button" onclick="updateData("datasetHrs")"> Hours worked annually </button>
-			<button class="dropdown-item" type="button" onclick="updateData("datasetWage")"> Real minimum wage </button>
-		</div>
-	</div>	
-
-<!-- 	<div class="dropdown"> 
-		<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 			Year </button>
-		<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-			<button class="dropdown-item" type="button"> 2003 </button>
-			<button class="dropdown-item" type="button"> 2004 </button> -->
-			<!-- <button class="dropdown-item" type="button" onclick="updateChart" > 2003 </button> -->
-
-		<!-- </div> -->
-	<!-- <script type="text/javascript">
-	</script> -->
-    <div style="position: absolute; bottom: 3px; background: rgba(0, 250, 250, 1);">
-    <p> Marc Moorman </br>
-    	10769781</p>
-    <p> Data sources: </br>
+		10769781 
+	<p> 04 -05 - 2018</p></h1>
+	<h2> The relationship between the Gross Domestic Product and the average hours worked annually for 2004	</h2>
+	<p> Data sources: </br>
 		<a href="http://stats.oecd.org/BrandedView.aspx?oecd_bv_id=pdtvy-data-en&doi=data-00686-en">GDP</a> </br>
 		<a href="http://stats.oecd.org/BrandedView.aspx?oecd_bv_id=lfs-data-en&doi=data-00656-en">Real minimum wage</a> </br>
 		<a href="http://stats.oecd.org/BrandedView.aspx?oecd_bv_id=lfs-data-en&doi=data-00303-en#">Hours worked annually</a> </br>
-		<p> 2018 (C)</p>
 	</p>
-	</div>
+
+	<p class="explanation"> The gross domestic product is an economical measurefor all products and services produced in a certain matter of time. This measure includes inflation rates and the cost of living in a country. This economical measure is put up against the average hours worked in a year per person in that country. Using these two variables I created a ratio, to see which countries get most GDP out of one hour worked.</p>
+	
+	<!-- Here I have tried to create buttons to switch inbetween variables, Hours worked annually/Real minimum wage. However I did not succeed in creating the function to update my data so I commented the buttons out of my code. I wanted to make "value" decisive in what data would be shown in the function "makeScatter"  -->
+<!-- 	<div class="dropdown"> 
+		<button class="dropbtn"> Subject </button>
+		<div class="dropdown-content"> 
+			<button class="dropdown-item" type="button" value="Hours" onclick="makeScatter()""> Hours worked annually </button>
+			<button class="dropdown-item" type="button" value="Wage" onclick="makeScatter()""> Real minimum wage </button>
+		</div>
+	</div> -->	
+
 </body>
 </html>
