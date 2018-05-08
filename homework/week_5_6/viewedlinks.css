@@ -10,6 +10,10 @@ h2 {
 	text-align: center;
 }
 
+/*body {
+	background-image: url("graduation_hat.png");
+}*/
+
 .axisText {
 	font-family: arial;
 	font-size: 10px;
@@ -47,6 +51,10 @@ h2 {
 }
 
 /*hoover aspects*/
+.rect {
+	fill: grey;
+}
+
 .rect:hover {
   fill: lightsteelblue ;
 }

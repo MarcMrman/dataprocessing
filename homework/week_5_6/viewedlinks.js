@@ -15,19 +15,47 @@ window.onload = function() {
 	function loadingPage(error, response) {
 		if (error) throw error;
 		
-		// console.log(response[0])
-		// console.log(response[1])	
+		console.log(response[1])	
+		console.log(response[0])
 
-		drawBarChart(response[0])
+		drawBarChart(response[0], 2)
 	};
 };
 
-function drawBarChart(educationExpenses){
+function drawBarChart(educationExpenses, wishedYear){
 
-	console.log(educationExpenses)
+	//console.log(educationExpenses)
 	
 	// initial data
-	var year = "2012 [YR2012]"
+	var year = "201"+ wishedYear + " [YR201" + wishedYear + "]"
+	
+	// change year variable to show updated data when clicked
+	document.getElementById("2012 [YR2012]").onclick = function(){
+		// remove old svg
+		d3.select("svg").remove();
+		wishedYear = 2;
+		drawBarChart(educationExpenses, wishedYear);
+	};
+	console.log(wishedYear)
+
+	// change year variable to show updated data when clicked
+	document.getElementById("2013 [YR2013]").onclick = function(){
+		// remove old svg
+		d3.select("svg").remove();
+		wishedYear = 3;
+		drawBarChart(educationExpenses, wishedYear);
+	};
+	console.log(wishedYear)
+
+	// change year variable to show updated data when clicked
+	document.getElementById("2014 [YR2014]").onclick = function(){
+		// remove old svg
+		d3.select("svg").remove();
+		wishedYear = 4;
+		drawBarChart(educationExpenses, wishedYear);
+	};
+	console.log(wishedYear)
+
 
 	// Characteristics for SVG element
 	var w = 500;
@@ -41,16 +69,16 @@ function drawBarChart(educationExpenses){
 	// max expenses 29 NIET HARDCODEN
 	var expenses = [];
 	for (var i = 0; i < 29; i ++){
-		var maxY = educationExpenses.data[i]["2012 [YR2012]"]
+		var maxY = educationExpenses.data[i][year] //["2012 [YR2012]"]
 		expenses.push(maxY)
 	}    
-	console.log(expenses)
+
 	var maxY = Math.max.apply(Math, expenses)
 
 	// scaling for the axis
 	var scaleX = d3.scaleLinear()
              			//.domain([minDate, maxDate]) KIJKEN HOE DAT WERKT MET LANDEN
-             			.range([leftMargin, w - rightMargin]);
+             			.range([leftMargin, w]); // - rightMargin]);
 	var scaleY = d3.scaleLinear()
 						.domain([maxY * 1.10, 0])
 						.range([topMargin, h - bottomMargin]);
@@ -73,7 +101,7 @@ function drawBarChart(educationExpenses){
 				.attr("class", "d3-tip")
 			    .offset([-20, 0]).html(function(d, i) {
 		 	    		return "<strong>Country:</strong> <span style='color:black'>" + educationExpenses.data[i]["Country Name"] + "</span>" + "</br>" +
-		 	    			"<strong>Expenses:</strong> <span style='color:black'>" + educationExpenses.data[i]["2012 [YR2012]"] + "</span>" + "</br>" });
+		 	    			"<strong>Expenses:</strong> <span style='color:black'>" + educationExpenses.data[i][year] + "</span>" + "</br>" }); //["2012 [YR2012]"]
 	svg.call(tip);
 
 	// drawing bars
@@ -86,11 +114,11 @@ function drawBarChart(educationExpenses){
 	   		return i * ((w - leftMargin) / educationExpenses.data.length) + leftMargin;
 	   })
 	   .attr("y", function(d, i){
-	   		return h - bottomMargin - (educationExpenses.data[i]["2012 [YR2012]"] * 12);
+	   		return h - bottomMargin - (educationExpenses.data[i][year] * 12);
 	   })
 	   .attr("width", ((w - leftMargin) / educationExpenses.data.length) - barPadding)
 	   .attr("height", function(d, i){
-	   		return educationExpenses.data[i]["2012 [YR2012]"] * 12;
+	   		return educationExpenses.data[i][year] * 12;
 	   })
 	   .on("mouseover", tip.show)
 	   .on("mouseout", tip.hide);
@@ -123,10 +151,5 @@ function drawBarChart(educationExpenses){
 	    .text("Expenses on education (as % of total government expenses)");
 };
 
-function updateGraph() {
-	if onclick 
-		if get element ("value") == "2013 [YR2013]"
-			year = "2012 [YR2012]" drawBarChart
 
-}
 //google D3 datamaps, dan eerste link
