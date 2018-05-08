@@ -9,13 +9,46 @@ education expenditure = https://data.worldbank.org/indicator/SE.XPD.TOTL.GB.ZS -
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://d3js.org/d3.v4.min.js"></script>
 	<script type="text/javascript" src="./d3/d3-tip.js"></script>
-<!-- 	<script data-main="scripts/main" src="./require.js"></script> -->
  	<script type="text/javascript" src="viewedlinks.js"></script>
 	<link rel="stylesheet" href="viewedlinks.css">
 </head>
 <body>
 	<h1>Marc Moorman </br>
 	10769781</h1>
+	<h2>A view on education in Europe</h2>
+
+	<div class="dropdown">
+		<button onclick="myFunction()" class="dropbtn">Year</button>
+	  	<div id="myDropdown" class="dropdown-content">
+		    <button class="m" id="Wage" type="button" value="2012 [YR2012]" onclick="updateGraph()""> 2012 </button>
+			<button class="m" id="Hours" type="button" value="2013 [YR2013]" onclick="updateGraph()""> 2013 </button>
+			<button class="m" id="Hours" type="button" value="2014 [YR2014]" onclick="updateGraph()""> 2014 </button>
+			<button class="m" id="Hours" type="button" value="2015 [YR2015]" onclick="updateGraph()""> 2015 </button>
+  </div>
+</div>
+<script type="text/javascript">
+	
+	/* When the user clicks on the button, 
+toggle between hiding and showing the dropdown content */
+function myFunction() {
+    document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    for (var i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script>
+
 
 </body>
 </html>
