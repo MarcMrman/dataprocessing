@@ -17,11 +17,14 @@ window.onload = function() {
 		
 		console.log(response[1])	
 		console.log(response[0])
-
+		
+		// calling function drawBarChart
 		drawBarChart(response[0], 2)
+		createMap()
 	};
 };
 
+// functino to draw bar charts depending on year given
 function drawBarChart(educationExpenses, wishedYear){
 
 	//console.log(educationExpenses)
@@ -55,7 +58,6 @@ function drawBarChart(educationExpenses, wishedYear){
 		drawBarChart(educationExpenses, wishedYear);
 	};
 	console.log(wishedYear)
-
 
 	// Characteristics for SVG element
 	var w = 500;
@@ -120,6 +122,8 @@ function drawBarChart(educationExpenses, wishedYear){
 	   .attr("height", function(d, i){
 	   		return educationExpenses.data[i][year] * 12;
 	   })
+	   // .on("click", function(d, i){
+	   // 		console.log(educationExpenses.data[i])}) // click werkt, nu nog linken aan map
 	   .on("mouseover", tip.show)
 	   .on("mouseout", tip.hide);
 
@@ -151,5 +155,64 @@ function drawBarChart(educationExpenses, wishedYear){
 	    .text("Expenses on education (as % of total government expenses)");
 };
 
+function createMap(){
+	
+	// determining width and height	
+	var w = 800;
+	var h = 400;
 
-//google D3 datamaps, dan eerste link
+	//Define map projection and center Europe
+	var projection = d3.geoMercator()
+						.center([ 13, 52 ])
+						.translate([ w / 2, h / 2 ])
+						.scale([ w / 1.5 ]);
+
+	//Define path generator
+	var path = d3.geoPath()
+				.projection(projection);
+
+	//Create SVG
+	var svg = d3.select("#container")
+				.append("svg")
+				.attr("width", w)
+				.attr("height", h);
+
+	// creating info window
+	var tip = d3.tip()
+				.attr("class", "d3-tip")
+			    .offset([-20, 0]).html(function(d, i) {
+		 	    		return "<strong>Country:</strong> <span style='color:black'>" + educationExpenses.data[i]["Country Name"] + "</span>" + "</br>" +
+		 	    			"<strong>Expenses:</strong> <span style='color:black'>" + educationExpenses.data[i][year] + "</span>" + "</br>" }); //["2012 [YR2012]"]
+	svg.call(tip);
+
+	//Load in GeoJSON data
+	d3.json("countryCoordinates.json", function(json) {
+		
+		//Bind data and create one path per GeoJSON feature
+		svg.selectAll("path")
+		   .data(json.features)
+		   .enter()
+		   .append("path")
+		   .attr("d", path)
+		   .attr("stroke", "rgba(8, 81, 156, 0.2)")
+		   .attr("fill", "rgba(8, 81, 156, 0.6)");
+});
+}
+
+// function that toggles between hiding and showing the dropdown content when clicked on
+function dropwdownFunction() {
+    document.getElementById("myDropdown").classList.toggle("show");
+}
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    for (var i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}

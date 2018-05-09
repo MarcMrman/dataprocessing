@@ -1,21 +1,14 @@
-<!-- europena countries source = https://europa.eu/european-union/about-eu/countries_en
-world uni ranking = http://cwur.org/
-education expenditure = https://data.worldbank.org/indicator/SE.XPD.TOTL.GB.ZS -->
-
 <!DOCTYPE html>
 <html>
 <head>
 	<title>European Universities</title>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link rel="shortcut icon" href="graduation_hat.png" type="image/png">
 	<script src="https://d3js.org/d3.v4.min.js"></script>
-	<!-- <script src="js/topojson.v1.min.js"></script> -->
+	<script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+	<script src="//d3js.org/topojson.v1.min.js"></script>
+	<script src="https://d3js.org/topojson.v2.min.js"></script>	
 	<script type="text/javascript" src="./d3/d3-tip.js"></script>
- 	<script type="text/javascript" src="viewedlinks.js"></script>
-<!--  	<script> 
-    $(function(){
-      $("#includedContent").load("mapEurope.html"); 
-    });
-    </script> -->
+ 	<script type="text/javascript" src="viewedlinks.js"></script>	
 	<link rel="stylesheet" href="viewedlinks.css">
 </head>
 <body>
@@ -28,38 +21,15 @@ education expenditure = https://data.worldbank.org/indicator/SE.XPD.TOTL.GB.ZS -
 	<h2>A view on European Universities</h2>
 
 	<div class="dropdown">
-		<button onclick="myFunction()" class="dropbtn">Year</button>
+		<button onclick="dropwdownFunction()" class="dropbtn">Year</button>
 	  	<div id="myDropdown" class="dropdown-content">
 		    <button class="m" id="2012 [YR2012]" type="button" value="2012 [YR2012]" onclick="updateBarChart(response[0], 2)""> 2012 </button>
 			<button class="m" id="2013 [YR2013]" type="button" value="2013 [YR2013]" onclick="updateBarChart(response[0], 3)""> 2013 </button>
 			<button class="m" id="2014 [YR2014]" type="button" value="2014 [YR2014]" onclick="updateBarChart(response[0], 4)""> 2014 </button>
   </div>
 </div>
-<!-- ADDING MAP EUROPE -->
-<!-- <div id="includedContent"></div> -->
-<script type="text/javascript">
-
-// DIT MOEt NOG IN JS ZETTEN	
-// * When the user clicks on the button, 
-// toggle between hiding and showing the dropdown content */
-function myFunction() {
-    document.getElementById("myDropdown").classList.toggle("show");
-}
-// Close the dropdown if the user clicks outside of it
-window.onclick = function(event) {
-  if (!event.target.matches('.dropbtn')) {
-
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    for (var i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
-    }
-  }
-}
-</script>
-
-
+<div id="container">
+	<h3>Map of Europe</h3>
+	</div>
 </body>
 </html>
