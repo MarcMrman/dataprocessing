@@ -23,131 +23,12 @@ window.onload = function() {
 	function loadingPage(error, response) {
 		if (error) throw error;
 
+		//console.log(response[0])
 		// calling function drawBarChart
-		drawBarChart(response[0], 2)
+		drawBarChart(response[0])
+		//drawBarChart(response[0], 2)
 		createMap(response[1], response[2], 2012, response[0], 2)
 	};
-};
-
-// function to draw bar charts depending on year given
-function drawBarChart(educationExpenses, wishedYear){
-	
-	// initial data
-	var year = "201"+ wishedYear + " [YR201" + wishedYear + "]"
-
-	// Characteristics for SVG element
-	var w = 500;
-	var h = 300;
-	var barPadding = 5;
-	var leftMargin = 50;
-	var bottomMargin = 50;
-	var topMargin = 10
-	var rightMargin = 35;
-	
-	// max expenses 29 NIET HARDCODEN
-	var expenses = [];
-	for (var i = 0; i < 29; i ++){
-		var maxY = educationExpenses.data[i][year]
-		expenses.push(maxY)
-	}    
-
-	var maxY = Math.max.apply(Math, expenses)
-
-	// scaling for the axis
-	var scaleX = d3.scaleLinear()
-             			//.domain([0, maxDate]) //KIJKEN HOE DAT WERKT MET LANDEN
-             			.range([leftMargin, w]); // - rightMargin]);
-	var scaleY = d3.scaleLinear()
-						.domain([maxY * 1.10, 0])
-						.range([topMargin, h - bottomMargin]);
-
-	// axis characteristics
-	var x_axis = d3.axisBottom()
-						.scale(scaleX)
-						.ticks(expenses.length);
-						
-	var y_axis = d3.axisLeft()
-					.scale(scaleY);
-
-	//Create SVG element
-	var svg = d3.select("body")
-	            .append("svg")
-	            .attr("id", "barChart")
-	            .attr("width", w)
-	            .attr("height", h);
-
-	// creating info window MINDER GETALLEN ACHTER DE KOMMA
-	var tip = d3.tip()
-				.attr("class", "d3-tip")
-			    .offset([-20, 0]).html(function(d, i) {
-		 	    		return "<strong>Country:</strong> <span style='color:black'>" + educationExpenses.data[i]["Country Name"] + "</span>" + "</br>" +
-		 	    			"<strong>Expenses:</strong> <span style='color:black'>" + educationExpenses.data[i][year] + "</span>" + "</br>" }); //["2012 [YR2012]"]
-	svg.call(tip);
-
-	console.log(educationExpenses)
-
-	// drawing bars
-	svg.selectAll("rect")
-	   .data(educationExpenses.data)
-	   .enter()
-	   .append("rect")
-	   .attr("class", "rect")
-	   .attr("id", function(d, i){
-	   		return educationExpenses.data[i]["Country Name"]})
-	   .attr("x", function(d, i){
-	   		return i * ((w - leftMargin) / educationExpenses.data.length) + leftMargin;
-	   })
-	   .attr("y", function(d, i){
-	   		return h - bottomMargin - (educationExpenses.data[i][year] * 12);
-	   })
-	   .attr("width", ((w - leftMargin) / educationExpenses.data.length) - barPadding)
-	   .attr("height", function(d, i){
-	   		return educationExpenses.data[i][year] * 12;
-	   })
-	   // when clicked on mark country on map
-		.on("click", function(educationExpenses, i) {
-			//var country = "path#" + educationExpenses.data["Country Name"];
-			//console.log(country)
-			console.log(d3.select("#container"));
-			
-			//console.log(d3.select("body").select(country));
-				
-				// d3.select("#container")
-				// .selectAll("path")
-				// .selectAll(country)
-				// .attr("fill", "red");
-			})
-
-	   .on("mouseover", tip.show)
-	   .on("mouseout", tip.hide);
-
-	// drawing x axis
-	svg.append("g")
-	    .attr("class", "axis")
-	    .attr("transform", "translate(0," + (h - bottomMargin) + ")")
-	    //.tickFormat(educationExpenses.data[i]["Country Code"])
-	    .call(x_axis);
-	// drawing y axis
-	svg.append("g")
-		.attr("class", "axis")
-	    .attr("transform", "translate(" + leftMargin + ", 0)")
-	    .call(y_axis);
-	
-	// x axis label
-	svg.append("text") 
-		.attr("class", "axisText")            
-	    .attr("transform", "translate(" + ( w / 2) + " ," + (h - bottomMargin + 20) + ")")
-	    .style("text-anchor", "middle")
-	    .text("Country");
-	// y axis label
-	svg.append("text")
-     	.attr("class", "axisText")
-	    .attr("transform", "rotate(-90)")
-	    .attr("y", 20)
-	    .attr("x", - (h / 2))
-	    .attr("dy", "1em")
-	    .style("text-anchor", "middle")
-	    .text("Expenses on education (as % of total government expenses)");
 };
 
 // function to draw map of europe
@@ -204,8 +85,7 @@ function createMap(uniRanking, countries, ranking, educationExpenses, wishedYear
 		 	    		return "<strong>Country:</strong> <span style='color:black'>" + countries.features[i].properties.admin + "</span>" + "</br>" +
 		 	    			"<strong>Univsersities:</strong> <span style='color:black'>" + getUni(countries.features[i].properties.admin, ranking) + "</span>" + "</br>" });
 	svg.call(tip);
-	
-	//console.log(countries)
+
 	//Load in GeoJSON data WEGHALEN, WORDT AL INGELADEN MET RESPONSE[2]
 	d3.json("countryCoordinates.json", function(json) {
 		
@@ -215,27 +95,123 @@ function createMap(uniRanking, countries, ranking, educationExpenses, wishedYear
 		   .enter()
 		   .append("path")
 		   .attr("d", path)
-		   .attr("class", "path")
-		   .attr("id", function(d, i){
-	   			return countries.features[i].properties.admin})
 		   .attr("stroke", "rgba(8, 81, 156, 0.2)")
 		   .attr("fill", "rgba(8, 81, 156, 0.6)")
-    		// when clicked on mark bar in bar chart
-    		// .on("click", function(countries, i) {
-    		// 	var country = "rect#" + countries.properties.admin;
-    		// 	console.log(d3.select("body").select(country._groups));
-    		// 	//console.log(d3.select("body").select(country));
-      			
-      // 			d3.select("body")
-      // 			.selectAll("rect")
-      // 			.selectAll(country)
-      // 			.attr("fill", "red");
-    		// 	})
+		   //.on("click", )
 		   .on("mouseover", tip.show)
 		   .on("mouseout", tip.hide);
 	});
 
 	updateGraphs(uniRanking, countries, ranking2012, ranking2013, ranking2014, educationExpenses, wishedYear )
+};
+
+// function to draw bar charts depending on year given
+function drawBarChart(educationExpenses){ //, wishedYear){
+	
+	// initial data
+	//var year = "201"+ wishedYear + " [YR201" + wishedYear + "]"
+
+	// Characteristics for SVG element
+	var w = 500;
+	var h = 300;
+	var barPadding = 5;
+	var leftMargin = 50;
+	var bottomMargin = 50;
+	var topMargin = 10
+	var rightMargin = 35;
+	
+	console.log(educationExpenses)
+	// max expenses 29 NIET HARDCODEN
+	var expenses = [];
+	for (var i = 0; i < 29; i ++){
+		//var maxY = educationExpenses.data[i]["2012 [YR2012"]
+		var exp2012 = educationExpenses.data[i]["2012 [YR2012]"]
+		var exp2013 = educationExpenses.data[i]["2013 [YR2013]"]
+		var exp2014 = educationExpenses.data[i]["2014 [YR2014]"]
+		expenses.push(exp2012);
+		expenses.push(exp2013);
+		expenses.push(exp2014);
+	};    
+	console.log(expenses)
+	var maxY = Math.max.apply(Math, expenses)
+
+	// scaling for the axis
+	var scaleX = d3.scaleLinear()
+             			//.domain([minDate, maxDate]) KIJKEN HOE DAT WERKT MET LANDEN
+             			.range([leftMargin, w]); // - rightMargin]);
+	var scaleY = d3.scaleLinear()
+						.domain([maxY * 1.10, 0])
+						.range([topMargin, h - bottomMargin]);
+
+	// axis characteristics
+	var x_axis = d3.axisBottom()
+						.scale(scaleX)
+						.ticks(0);
+	var y_axis = d3.axisLeft()
+					.scale(scaleY);
+
+	//Create SVG element
+	var svg = d3.select("body")
+	            .append("svg")
+	            .attr("id", "barChart")
+	            .attr("width", w)
+	            .attr("height", h);
+
+	// creating info window MINDER GETALLEN ACHTER DE KOMMA
+	var tip = d3.tip()
+				.attr("class", "d3-tip")
+			    .offset([-20, 0]).html(function(d, i) {
+		 	    		return "<strong>Country:</strong> <span style='color:black'>" + educationExpenses.data[i]["Country Name"] + "</span>" + "</br>" +
+		 	    			"<strong>Expenses:</strong> <span style='color:black'>" + educationExpenses.data[i][year] + "</span>" + "</br>" }); //["2012 [YR2012]"]
+	svg.call(tip);
+
+	// drawing bars
+	svg.selectAll("rect")
+	   .data(educationExpenses.data)
+	   .enter()
+	   .append("rect")
+	   .attr("class", "rect")
+	   .attr("x", function(d, i){
+	   		return i * ((w - leftMargin) / educationExpenses.data.length) + leftMargin;
+	   })
+	   .attr("y", function(d, i){
+	   		return h - bottomMargin - (educationExpenses.data[i] * 12);
+	   })
+	   .attr("width", ((w - leftMargin) / educationExpenses.data.length) - barPadding)
+	   .attr("height", function(d, i){
+	   		return educationExpenses.data[i] * 12;
+	   })
+	   //.on("click", function(d, i){
+	   	//	console.log(educationExpenses.data[i]["Country Name"])}) // click werkt, nu nog linken aan map
+	   .on("mouseover", tip.show)
+	   .on("mouseout", tip.hide);
+
+	// drawing x axis
+	svg.append("g")
+	    .attr("class", "axis")
+	    .attr("transform", "translate(0," + (h - bottomMargin) + ")")
+	    .call(x_axis);
+	// drawing y axis
+	svg.append("g")
+		.attr("class", "axis")
+	    .attr("transform", "translate(" + leftMargin + ", 0)")
+	    .call(y_axis);
+	
+	// x axis label
+	svg.append("text") 
+		.attr("class", "axisText")            
+	    .attr("transform", "translate(" + ( w / 2) + " ," + (h - bottomMargin + 20) + ")")
+	    .style("text-anchor", "middle")
+	    .text("Country");
+	// y axis label
+	svg.append("text")
+     	.attr("class", "axisText")
+	    .attr("transform", "rotate(-90)")
+	    .attr("y", 20)
+	    .attr("x", - (h / 2))
+	    .attr("dy", "1em")
+	    .style("text-anchor", "middle")
+	    .text("Expenses on education (as % of total government expenses)");
 };
 
 // function to retrieve universities listed in country hoovered over
