@@ -52,14 +52,14 @@ world_rank,institution,country,national_rank,quality_of_education,alumni_employm
 51,Technion â€“ Israel Institute of Technology,Israel,3,45,89,36,101,101,101,,51,50.01,2012
 52,Ohio State University, Columbus,USA,38,101,101,83,30,50,35,,54,49.54,2012
 53,University of Rochester,USA,39,41,54,101,82,68,54,,62,49.51,2012
-54,Ã‰cole normale supÃ©rieure - Paris,France,2,3,61,77,101,101,101,,101,49.1,2012
+54,École normale supérieure - Paris,France,2,3,61,77,101,101,101,,101,49.1,2012
 55,University of Florida,USA,40,101,101,96,29,74,42,,2,48.8,2012
 56,Tel Aviv University,Israel,4,97,101,51,72,101,101,,35,48.76,2012
 57,Rice University,USA,41,28,53,94,101,101,53,,101,48.76,2012
 58,Dartmouth College,USA,42,27,13,101,101,101,101,,92,48.5,2012
 59,Vanderbilt University,USA,43,80,72,101,50,35,49,,101,48.44,2012
 60,University of Edinburgh,United Kingdom,1,71,101,43,64,41,70,,101,48.43,2012
-61,Ã‰cole Polytechnique,France,3,47,3,101,101,101,101,,101,48.33,2012
+61,École Polytechnique,France,3,47,3,101,101,101,101,,101,48.33,2012
 62,Boston University,USA,44,101,101,86,48,34,37,,101,48.31,2012
 63,Pierre-and-Marie-Curie University,France,4,54,101,84,36,53,78,,101,48.26,2012
 64,Pennsylvania State University, University Park,USA,45,101,94,101,38,60,27,,99,48.15,2012
@@ -162,7 +162,7 @@ world_rank,institution,country,national_rank,quality_of_education,alumni_employm
 61,Vanderbilt University,USA,41,101,101,101,53,40,60,,40,47.8,2013
 62,Sapienza University of Rome,Italy,1,101,101,31,76,101,101,,101,47.75,2013
 63,Washington University in St. Louis,USA,42,101,101,101,36,20,32,,101,47.72,2013
-64,Ã‰cole normale supÃ©rieure - Paris,France,3,8,101,57,101,101,101,,101,47.7,2013
+64,École normale supérieure - Paris,France,3,8,101,57,101,101,101,,101,47.7,2013
 65,University of California, Irvine,USA,43,101,101,39,69,67,61,,101,47.52,2013
 66,Technion â€“ Israel Institute of Technology,Israel,4,50,101,36,101,101,101,,73,47.45,2013
 67,Ludwig Maximilian University of Munich,Germany,1,62,101,92,67,49,67,,101,47.25,2013
@@ -184,7 +184,7 @@ world_rank,institution,country,national_rank,quality_of_education,alumni_employm
 83,Swiss Federal Institute of Technology in Lausanne,Switzerland,4,101,101,85,101,101,83,,54,45.73,2013
 84,Utrecht University,Netherlands,1,101,101,101,39,44,47,,101,45.73,2013
 85,Indiana University - Bloomington,USA,52,101,48,101,50,72,59,,101,45.71,2013
-86,Ã‰cole Polytechnique,France,4,101,4,101,101,101,101,,101,45.38,2013
+86,École Polytechnique,France,4,101,4,101,101,101,101,,101,45.38,2013
 87,National University of Singapore,Singapore,1,101,101,101,44,101,50,,27,45.2,2013
 88,University of Texas MD Anderson Cancer Center,USA,53,101,101,101,90,32,56,,101,45.12,2013
 89,Stony Brook University,USA,54,101,101,68,101,101,98,,90,45.01,2013
@@ -233,8 +233,8 @@ world_rank,institution,country,national_rank,quality_of_education,alumni_employm
 32,University of Washington - Seattle,USA,23,89,107,46,9,11,8,5,54,60.28,2014
 33,Rutgers University-New Brunswick,USA,24,91,33,31,52,47,38,51,54,60,2014
 34,Keio University,Japan,3,271,5,210,299,243,310,266,159,59.84,2014
-35,Ã‰cole normale supÃ©rieure - Paris,France,1,8,478,59,362,156,493,311,737,59.72,2014
-36,Ã‰cole Polytechnique,France,2,150,6,208,323,282,250,295,181,59.54,2014
+35,École normale supérieure - Paris,France,1,8,478,59,362,156,493,311,737,59.72,2014
+36,École Polytechnique,France,2,150,6,208,323,282,250,295,181,59.54,2014
 37,Rockefeller University,USA,25,72,478,14,347,26,107,62,227,59.49,2014
 38,Weizmann Institute of Science,Israel,2,18,478,22,233,63,250,137,51,59.17,2014
 39,Imperial College London,United Kingdom,4,121,98,38,20,27,31,17,34,58.85,2014
@@ -334,8 +334,8 @@ world_rank,institution,country,national_rank,quality_of_education,alumni_employm
 33,University of Illinois at Urbanaâ€“Champaign,USA,24,33,75,21,40,48,42,74,65,59.94,2015
 34,Keio University,Japan,3,284,5,218,309,246,368,270,80,59.84,2015
 35,Imperial College London,United Kingdom,4,90,82,30,19,26,23,19,47,59.61,2015
-36,Ã‰cole Polytechnique,France,1,98,7,216,327,314,234,295,172,59.2,2015
-37,Ã‰cole normale supÃ©rieure - Paris,France,2,8,502,54,379,157,645,295,871,58.8,2015
+36,École Polytechnique,France,1,98,7,216,327,314,234,295,172,59.2,2015
+37,École normale supérieure - Paris,France,2,8,502,54,379,157,645,295,871,58.8,2015
 38,Waseda University,Japan,4,288,8,218,406,389,368,388,248,58.17,2015
 39,Weizmann Institute of Science,Israel,2,19,567,22,246,63,234,143,45,57.17,2015
 40,University of North Carolina at Chapel Hill,USA,25,124,69,86,32,32,19,21,41,57.09,2015

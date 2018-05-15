@@ -64,8 +64,8 @@ function drawBarChart(educationExpenses, wishedYear){
 
 	// axis characteristics
 	var x_axis = d3.axisBottom()
-						.scale(scaleX)
-						.ticks(0); //expenses.length
+					.scale(scaleX)
+					.ticks(0); //expenses.length
 						
 	var y_axis = d3.axisLeft()
 					.scale(scaleY);
@@ -106,6 +106,17 @@ function drawBarChart(educationExpenses, wishedYear){
 	   .attr("width", ((w - leftMargin) / educationExpenses.data.length) - barPadding)
 	   .attr("height", function(d, i){
 	   		return educationExpenses.data[i][year] * 12;
+	   })
+	   .attr("fill", function(d, i){
+	   		if (educationExpenses.data[i][year] < 10){
+	   			return "#2c7fb8";
+	   		}
+	   		else if (educationExpenses.data[i][year] > 10 && educationExpenses.data[i][year] < 15){
+	   			return "#7fcdbb";
+	   		}
+	   		else if (educationExpenses.data[i][year] > 15 && educationExpenses.data[i][year] < 20){
+	   			return "#edf8b1";
+	   		}
 	   })
 	   // when clicked on mark country on map
 		//.on("mousemove", function(educationExpenses, i) {
@@ -154,6 +165,8 @@ function drawBarChart(educationExpenses, wishedYear){
 	    .attr("dy", "1em")
 	    .style("text-anchor", "middle")
 	    .text("Expenses on education (as % of total government expenses)");
+
+	//addLegend(w, h)
 };
 
 // function to draw map of europe
@@ -243,7 +256,7 @@ function createMap(uniRanking, countries, ranking, educationExpenses, wishedYear
 	  	// 	}
 	  	// })
 	   	
-		// when clicked on map in bar chart
+		// when move over country on map light up cuontry in barchart
 	   .on("mouseenter", function(countries, i) {
 			//var country = [];
 			country = "rect#" + countries.properties.admin;
@@ -334,6 +347,69 @@ function updateGraphs(uniRanking, countries, ranking2012, ranking2013, ranking20
 		createMap(uniRanking, countries, wishedRanking, educationExpenses, wishedYear);
 	};
 };
+
+// function to draw a legend into SVG element
+// function addLegend(wBarChart, hBarChart){
+	
+// 	// adding legend (colors chosen using color brewer color blind friendly)
+// 	var w = wBarChart //wBarChart + 50;
+// 	var h = 50 //hBarChart + 50;
+
+// 	var legend = d3.select("body")
+// 				.append("svg")
+// 				.attr("id", "legend")
+// 				.attr("width", w)
+// 				.attr("height", h);
+	
+// 	var three = [1, 2, 3];
+	
+// 	legend.append("rect")
+// 		  .data(three)
+// 		  .enter()
+// 		  .append("rect")
+// 		  .attr("class", "legend")
+// 	      .attr("y", h - 10) //h + 100 - (i * 30);
+// 	      .attr("x", function(d, i){
+// 	      		return w - 100;	//return w - (i * 100);
+// 	      	})
+// 	      .attr("width", 5)
+// 	      .attr("height", 5)
+// 	      .attr("fill", "blue")
+// 	      // .style("fill", function(d, i){
+// 	      // 	if (h - h + 100 - (i * 30) == 100 ) {return "#c51b8a"}
+// 	      // 	else if (h - h + 100 - (i * 30) == 70) {return "#fa9fb5"}
+// 	      // 	else {return "#000000"}
+// 	      // });
+
+// 	// adding text in legend
+// 	// svg.append("text")
+// 	// 	.attr("x", w - 100)
+// 	//     .attr("y", h - h + 100 - (3 * 30))
+// 	//     .attr("dy", ".35em")
+// 	//     .style("text-anchor", "end")
+// 	//     .text("GDP/Subject ratio (Australia as benchmark):");
+
+// 	// svg.append("text")
+// 	// 	.attr("x", w - 325) // - 100)
+// 	//     .attr("y", h - 10)//- h + 100 - (0 * 30))
+// 	//     .attr("dy", ".35em")
+// 	//     .style("text-anchor", "end")
+// 	//     .text("Expenses: < 10 %");
+
+// 	// svg.append("text")
+// 	// 	.attr("x", w - 117) // - 100)
+// 	//     .attr("y", h - 10) //h + 100 - (1 * 30) )
+// 	//     .attr("dy", ".35em")
+// 	//     .style("text-anchor", "end")
+// 	//     .text(" > 10 % and < 15 %");
+
+// 	// svg.append("text")
+// 	// 	.attr("x", w) // - 100)
+// 	//     .attr("y", h - 10) //h + 100 - (2 * 30) )
+// 	//     .attr("dy", ".35em")
+// 	//     .style("text-anchor", "end")
+// 	//     .text(" > 15 % and < 20 %");
+// };
 
 // function that toggles between hiding and showing the dropdown content when clicked on
 function dropwdownFunction() {

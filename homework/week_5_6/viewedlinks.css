@@ -63,9 +63,9 @@ h5 {
 }
 
 /*hoover aspects*/
-.rect {
+/*.rect {
 	fill: grey;
-}
+}*/
 
 .rect:hover {
   fill: lightsteelblue ;
@@ -130,6 +130,7 @@ h5 {
 
 #country {
   font-family: arial;
+  font-style: italic;
   font-size: 18px;
   text-align: center;
 }
@@ -146,3 +147,6 @@ path:hover {
 	cursor:pointer;
 }
 
+#legend {
+  background-color: red;
+}

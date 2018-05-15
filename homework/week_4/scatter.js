@@ -305,7 +305,9 @@ function addLegend(svg, w, h){
 	
 	// adding legend (colors chosen using color brewer color blind friendly)
 	var legend = svg.selectAll("legend")
+	
 	var three = [1, 2, 3];
+	
 	legend.append("rect")
 		  .data(three)
 		  .enter()
