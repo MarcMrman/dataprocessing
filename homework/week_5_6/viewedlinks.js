@@ -1,12 +1,13 @@
-// Marc Moorman
-// 10769781
-// program that......
+/** 
+* Marc Moorman
+* 10769781
+* program that...... 
+**/
 
 // Feedback:
-// queue functie ipv d3.json(?), staat er toch
 // barchart niet helemaal verwijderen maar alleen bars
 // Landnamen op x-as barchart
-// NOORWEGEN NOG IN DE KAART KRIJGEN
+// NOORWEGEN en RUSLAND NOG IN DE KAART KRIJGEN
 // INDENTATION NOG VRAGEN 
 
 // function that is triggered when page is loaded
@@ -32,7 +33,7 @@ window.onload = function() {
 // function to draw bar charts depending on year given
 function drawBarChart(educationExpenses, wishedYear){
 	
-	// initial data
+	// initial data printed
 	var year = "201"+ wishedYear + " [YR201" + wishedYear + "]"
 
 	// Characteristics for SVG element
@@ -55,16 +56,16 @@ function drawBarChart(educationExpenses, wishedYear){
 
 	// scaling for the axis
 	var scaleX = d3.scaleLinear()
-             			//.domain([0, maxDate]) //KIJKEN HOE DAT WERKT MET LANDEN
-             			.range([leftMargin, w]); // - rightMargin]);
+             		//.domain([0, maxDate]) //KIJKEN HOE DAT WERKT MET LANDEN
+             		.range([leftMargin, w]); // - rightMargin]);
 	var scaleY = d3.scaleLinear()
-						.domain([maxY * 1.10, 0])
-						.range([topMargin, h - bottomMargin]);
+					.domain([maxY * 1.10, 0])
+					.range([topMargin, h - bottomMargin]);
 
 	// axis characteristics
 	var x_axis = d3.axisBottom()
 						.scale(scaleX)
-						.ticks(expenses.length);
+						.ticks(0); //expenses.length
 						
 	var y_axis = d3.axisLeft()
 					.scale(scaleY);
@@ -76,15 +77,16 @@ function drawBarChart(educationExpenses, wishedYear){
 	            .attr("width", w)
 	            .attr("height", h);
 
-	// creating info window MINDER GETALLEN ACHTER DE KOMMA
+	// creating info window
 	var tip = d3.tip()
 				.attr("class", "d3-tip")
 			    .offset([-20, 0]).html(function(d, i) {
 		 	    		return "<strong>Country:</strong> <span style='color:black'>" + educationExpenses.data[i]["Country Name"] + "</span>" + "</br>" +
-		 	    			"<strong>Expenses:</strong> <span style='color:black'>" + educationExpenses.data[i][year] + "</span>" + "</br>" }); //["2012 [YR2012]"]
+		 	    			"<strong>Expenses:</strong> <span style='color:black'>" + Math.round(educationExpenses.data[i][year] * 100) / 100 
+		 	    			+ "%" + "</span>" + "<br>" });
 	svg.call(tip);
 
-	console.log(educationExpenses)
+	//console.log(educationExpenses)
 
 	// drawing bars
 	svg.selectAll("rect")
@@ -93,6 +95,7 @@ function drawBarChart(educationExpenses, wishedYear){
 	   .append("rect")
 	   .attr("class", "rect")
 	   .attr("id", function(d, i){
+	   		//console.log(educationExpenses.data[i]["Country Name"])
 	   		return educationExpenses.data[i]["Country Name"]})
 	   .attr("x", function(d, i){
 	   		return i * ((w - leftMargin) / educationExpenses.data.length) + leftMargin;
@@ -105,19 +108,22 @@ function drawBarChart(educationExpenses, wishedYear){
 	   		return educationExpenses.data[i][year] * 12;
 	   })
 	   // when clicked on mark country on map
-		.on("click", function(educationExpenses, i) {
-			//var country = "path#" + educationExpenses.data["Country Name"];
-			//console.log(country)
-			console.log(d3.select("#container"));
+		//.on("mousemove", function(educationExpenses, i) {
+			// console.log(educationExpenses.data["Country Name"])
+			// var country = "path#" + educationExpenses.data["Country Name"];
+			// //var country = "path#" + countries.properties.admin;
+			// //console.log(country)
+			// console.log(d3.select("#container"));
 			
-			//console.log(d3.select("body").select(country));
+			// //console.log(d3.select("body").select(country));
 				
-				// d3.select("#container")
-				// .selectAll("path")
-				// .selectAll(country)
-				// .attr("fill", "red");
-			})
+			// d3.select("#container")
+			// .selectAll(country)
+			// .attr("fill", "red");
+			// })
 
+    			// var country = "rect#" + countries.properties.admin;
+    			// console.log(d3.select("body").select(country));
 	   .on("mouseover", tip.show)
 	   .on("mouseout", tip.hide);
 
@@ -156,7 +162,6 @@ function createMap(uniRanking, countries, ranking, educationExpenses, wishedYear
 	var ranking2012 = [];
 	var ranking2013 = [];
 	var ranking2014= [];
-	//console.log(ranking2012)
 
 	// 100/200/300 hardoced
 	// dividing list up into ranking per year
@@ -196,46 +201,70 @@ function createMap(uniRanking, countries, ranking, educationExpenses, wishedYear
 				.attr("id", "map")
 				.attr("width", w)
 				.attr("height", h);
+	
+	// KAN NOG ERBIJ ALS VLAK GROTER WIL MAAR DNA GAAT BAR CHART WEL UIT BEELD
+	// var svgText = d3.select("#text")
+	// 			.append("svg")
+	// 			.attr("id", "text")
+	// 			.attr("width", w / 2)
+	// 			.attr("height", h / 2);
 
 	// creating info window
 	var tip = d3.tip()
 				.attr("class", "d3-tip")
 			    .offset([0, 0]).html(function(d, i) {
 		 	    		return "<strong>Country:</strong> <span style='color:black'>" + countries.features[i].properties.admin + "</span>" + "</br>" +
-		 	    			"<strong>Univsersities:</strong> <span style='color:black'>" + getUni(countries.features[i].properties.admin, ranking) + "</span>" + "</br>" });
+		 	    			"<strong>Highest ranked univsersity:</strong> <span style='color:black'>" + getUni(countries.features[i].properties.admin, ranking)[1] + "</span>" + "</br>" });
 	svg.call(tip);
 	
-	//console.log(countries)
-	//Load in GeoJSON data WEGHALEN, WORDT AL INGELADEN MET RESPONSE[2]
-	d3.json("countryCoordinates.json", function(json) {
-		
-		//Bind data and create one path per GeoJSON feature
-		svg.selectAll("path")
-		   .data(json.features)
-		   .enter()
-		   .append("path")
-		   .attr("d", path)
-		   .attr("class", "path")
-		   .attr("id", function(d, i){
-	   			return countries.features[i].properties.admin})
-		   .attr("stroke", "rgba(8, 81, 156, 0.2)")
-		   .attr("fill", "rgba(8, 81, 156, 0.6)")
-    		// when clicked on mark bar in bar chart
-    		// .on("click", function(countries, i) {
-    		// 	var country = "rect#" + countries.properties.admin;
-    		// 	console.log(d3.select("body").select(country._groups));
-    		// 	//console.log(d3.select("body").select(country));
-      			
-      // 			d3.select("body")
-      // 			.selectAll("rect")
-      // 			.selectAll(country)
-      // 			.attr("fill", "red");
-    		// 	})
-		   .on("mouseover", tip.show)
-		   .on("mouseout", tip.hide);
-	});
+	// console.log(ranking)	
+	// console.log(countries)
 
-	updateGraphs(uniRanking, countries, ranking2012, ranking2013, ranking2014, educationExpenses, wishedYear )
+	//Bind data and create one path per GeoJSON feature
+	svg.selectAll("path")
+	   .data(countries.features)
+	   .enter()
+	   .append("path")
+	   .attr("d", path)
+	   .attr("class", "path")
+	   .attr("id", function(d, i){
+   			return countries.features[i].properties.admin})
+	   .attr("stroke", "rgba(8, 81, 156, 0.2)")
+	   .attr("fill", "rgba(8, 81, 156, 0.6)")
+	   // FILL COUNTRIES WITH COLORS
+	   // 	function(countries, ranking, i){
+	   // 		for (var i = 0; i < 100; i ++){
+	   // 			if (countries.features[i].properties.admin == ranking[i]["country"]){
+	   // 				return "rgba(8, 81, 156, 0.6)";
+	   // 			}
+	   // 			else {
+	   // 				return "grey";
+	   // 			}
+	  	// 	}
+	  	// })
+	   	
+		// when clicked on map in bar chart
+	   .on("mouseenter", function(countries, i) {
+			//var country = [];
+			country = "rect#" + countries.properties.admin;
+			//console.log(d3.select("body").select(country));
+  			
+  			d3.select("body")
+  			.selectAll(country)
+  			.style("fill", "red");
+  			// .attr("class", "interaction")
+  			// .attr("id", "interaction")
+  			// .style("fill", "grey")
+			})
+	   .on("mouseover", tip.show)
+	   .on("mouseout", tip.hide) 
+	   //displays universities in country in top 100 when clicked on
+   	   .on("click", function(uniRanking, i){
+	   		document.getElementById("country").innerHTML = countries.features[i].properties.admin;
+	   		document.getElementById("uniText").innerHTML = getUni(countries.features[i].properties.admin, ranking);
+	   	});
+
+	updateGraphs(uniRanking, countries, ranking2012, ranking2013, ranking2014, educationExpenses, wishedYear);
 };
 
 // function to retrieve universities listed in country hoovered over
@@ -245,20 +274,32 @@ function getUni(country, wishedYear) {
 	// gathering uni's per country
 	for (var i = 0; i < wishedYear.length; i ++){
 		if (country == wishedYear[i].country){
-			unis.push(wishedYear[i].world_rank),
-			unis.push(wishedYear[i].institution);
-		}
-	}
+			unis.push(wishedYear[i].world_rank)
+			unis.push(wishedYear[i].institution)
+			unis.push(wishedYear[i].publications)
+			unis.push(wishedYear[i].national_rank)
+			unis.push("<br>");
+		};		
+	};
 	return unis;
-}
+};
 
+// function to print additional info into html
+// function additionalInfo(countries, i){
+// 	var country = document.getElementById("country").innerHTML = countries.features[i].properties.admin;
+// 	var uni = document.getElementById("uniText").innerHTML = getUni(countries.features[i].properties.admin, ranking);
+
+// 	return country//, uni;
+// }
+
+// function to update both map and bar chart
 function updateGraphs(uniRanking, countries, ranking2012, ranking2013, ranking2014, educationExpenses, wishedYear){
 
 	// change year variable to show updated data when clicked
-	document.getElementById("2012 [YR2012]").onclick = function(){
+	document.getElementById("2012").onclick = function(){
 		
 		// remove old bar chart svg
-		console.log("updatefunciton")
+		// console.log("updatefunciton")
 		d3.select("#barChart").remove();
 		d3.select("#map").remove();
 		wishedYear = 2;
@@ -268,7 +309,7 @@ function updateGraphs(uniRanking, countries, ranking2012, ranking2013, ranking20
 	};	
 
 	// change year variable to show updated data when clicked
-	document.getElementById("2013 [YR2013]").onclick = function(){
+	document.getElementById("2013").onclick = function(){
 		
 		// remove old bar chart svg
 		console.log("updatefunciton")
@@ -281,7 +322,7 @@ function updateGraphs(uniRanking, countries, ranking2012, ranking2013, ranking20
 	};
 
 	// change year variable to show updated data when clicked
-	document.getElementById("2014 [YR2014]").onclick = function(){
+	document.getElementById("2014").onclick = function(){
 		
 		// remove old bar chart svg
 		console.log("updatefunciton")
@@ -297,17 +338,18 @@ function updateGraphs(uniRanking, countries, ranking2012, ranking2013, ranking20
 // function that toggles between hiding and showing the dropdown content when clicked on
 function dropwdownFunction() {
     document.getElementById("myDropdown").classList.toggle("show");
-}
+};
+
 // Close the dropdown if the user clicks outside of it
 window.onclick = function(event) {
-  if (!event.target.matches('.dropbtn')) {
+  if (!event.target.matches(".dropbtn")) {
 
-    var dropdowns = document.getElementsByClassName("dropdown-content");
+  	var dropdowns = document.getElementsByClassName("dropdown-content");
     for (var i = 0; i < dropdowns.length; i++) {
       var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
-    }
-  }
-}
+      if (openDropdown.classList.contains("show")) {
+        openDropdown.classList.remove("show");
+      };
+    };
+  };
+};

@@ -1,17 +1,21 @@
-<!-- Marc Moorman
-10769781 -->
+<!-- 
+* Marc Moorman
+* 10769781 
+* HTML layout for viewed links
+-->
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+	<!-- including necessary javascript and css libraries/files -->
 	<title>European Universities</title>
 	<link rel="shortcut icon" href="graduation_hat.png" type="image/png">
 	<script src="https://d3js.org/d3.v4.min.js"></script>
 	<script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
 	<script src="//d3js.org/topojson.v1.min.js"></script>
 	<script src="https://d3js.org/topojson.v2.min.js"></script>	
-	<script type="text/javascript" src="./d3/d3-tip.js"></script>
- 	<script type="text/javascript" src="viewedlinks.js"></script>	
+	<script src="./d3/d3-tip.js"></script>
+ 	<script src="viewedlinks.js"></script>	
 	<link rel="stylesheet" href="viewedlinks.css">
 </head>
 <body>
@@ -22,18 +26,29 @@
 	<a href="https://data.worldbank.org/indicator/SE.XPD.TOTL.GB.ZS">Education expenditure </a>
 </h1>
 	<h2>A view on European Universities</h2>
-
+	<!-- inserting a dropdown menu -->
 	<div class="dropdown">
 		<button onclick="dropwdownFunction()" class="dropbtn">Year</button>
 	  	<div id="myDropdown" class="dropdown-content">
-		    <button class="m" id="2012_[YR2012]" type="button" value="2012_[YR2012]"> 2012 </button>
-			<button class="m" id="2013_[YR2013]" type="button" value="2013_[YR2013]"> 2013 </button>
-			<button class="m" id="2014_[YR2014]" type="button" value="2014_[YR2014]"> 2014 </button>
+		   <!--  id/value veranderen in leesbaarder iets -->
+		    <button class="m" id="2012" type="button" value="2012_[YR2012]"> 2012 </button>
+			<button class="m" id="2013" type="button" value="2013_[YR2013]"> 2013 </button>
+			<button class="m" id="2014" type="button" value="2014_[YR2014]"> 2014 </button>
   </div>
 </div>
-
+<!-- creating a div for map of europe -->
 <div id="container">
 	<h3>Map of Europe</h3>
 	</div>
+
+<!-- div for text with info on universities in country -->
+<div id="uniContainer">
+	<h4>Additional information</h4>
+	<h5>World Ranking, Institution, Publications, National Ranking</h5>
+	<div id="country">
+	</div>
+	<div id="uniText">
+	</div>
+</div>
 </body>
 </html>
