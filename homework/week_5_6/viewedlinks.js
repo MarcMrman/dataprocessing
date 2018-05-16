@@ -8,7 +8,8 @@
 // barchart niet helemaal verwijderen maar alleen bars
 // Landnamen op x-as barchart
 // NOORWEGEN en RUSLAND NOG IN DE KAART KRIJGEN
-// INDENTATION NOG VRAGEN 
+// INDENTATION NOG VRAGEN
+// INITIELE DATA MAP DOEN 
 
 // function that is triggered when page is loaded
 window.onload = function() {
@@ -78,13 +79,13 @@ function drawBarChart(educationExpenses, wishedYear){
 	            .attr("height", h);
 
 	// creating info window
-	var tip = d3.tip()
+	var tipBar = d3.tip()
 				.attr("class", "d3-tip")
 			    .offset([-20, 0]).html(function(d, i) {
 		 	    		return "<strong>Country:</strong> <span style='color:black'>" + educationExpenses.data[i]["Country Name"] + "</span>" + "</br>" +
 		 	    			"<strong>Expenses:</strong> <span style='color:black'>" + Math.round(educationExpenses.data[i][year] * 100) / 100 
 		 	    			+ "%" + "</span>" + "<br>" });
-	svg.call(tip);
+	svg.call(tipBar);
 
 	//console.log(educationExpenses)
 
@@ -107,17 +108,19 @@ function drawBarChart(educationExpenses, wishedYear){
 	   .attr("height", function(d, i){
 	   		return educationExpenses.data[i][year] * 12;
 	   })
-	   .attr("fill", function(d, i){
-	   		if (educationExpenses.data[i][year] < 10){
-	   			return "#2c7fb8";
-	   		}
-	   		else if (educationExpenses.data[i][year] > 10 && educationExpenses.data[i][year] < 15){
-	   			return "#7fcdbb";
-	   		}
-	   		else if (educationExpenses.data[i][year] > 15 && educationExpenses.data[i][year] < 20){
-	   			return "#edf8b1";
-	   		}
-	   })
+	   .attr("fill", "grey")
+// FUNCTIEN VOOR MOOIE KLEUREN BAR CHART
+	   	// function(d, i){
+	   	// 	if (educationExpenses.data[i][year] < 10){
+	   	// 		return "#2c7fb8";
+	   	// 	}
+	   	// 	else if (educationExpenses.data[i][year] > 10 && educationExpenses.data[i][year] < 15){
+	   	// 		return "#7fcdbb";
+	   	// 	}
+	   	// 	else if (educationExpenses.data[i][year] > 15 && educationExpenses.data[i][year] < 20){
+	   	// 		return "#edf8b1";
+	   	// 	}
+	   //})
 	   // when clicked on mark country on map
 		//.on("mousemove", function(educationExpenses, i) {
 			// console.log(educationExpenses.data["Country Name"])
@@ -135,8 +138,8 @@ function drawBarChart(educationExpenses, wishedYear){
 
     			// var country = "rect#" + countries.properties.admin;
     			// console.log(d3.select("body").select(country));
-	   .on("mouseover", tip.show)
-	   .on("mouseout", tip.hide);
+	   .on("mouseover", tipBar.show)
+	   .on("mouseout", tipBar.hide);
 
 	// drawing x axis
 	svg.append("g")
@@ -258,17 +261,19 @@ function createMap(uniRanking, countries, ranking, educationExpenses, wishedYear
 	   	
 		// when move over country on map light up cuontry in barchart
 	   .on("mouseenter", function(countries, i) {
-			//var country = [];
 			country = "rect#" + countries.properties.admin;
-			//console.log(d3.select("body").select(country));
-  			
   			d3.select("body")
   			.selectAll(country)
-  			.style("fill", "red");
-  			// .attr("class", "interaction")
-  			// .attr("id", "interaction")
-  			// .style("fill", "grey")
-			})
+  			.style("fill", "red")
+  			// .on("mouseover", tipBar.show)
+  			// .on("mouseout", tipBar.hide); 
+  		})
+  		.on("mouseleave", function(countries, i){
+			country = "rect#" + countries.properties.admin;
+  			d3.select("body")
+  			.selectAll(country)
+  			.style("fill", "grey");
+  			})
 	   .on("mouseover", tip.show)
 	   .on("mouseout", tip.hide) 
 	   //displays universities in country in top 100 when clicked on
