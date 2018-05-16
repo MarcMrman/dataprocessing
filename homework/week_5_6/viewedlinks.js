@@ -6,10 +6,8 @@
 
 // Feedback:
 // barchart niet helemaal verwijderen maar alleen bars
-// Landnamen op x-as barchart
+// Landnamen op x-as barchart LICHT OP ALS HOOVERT DUS HOEFT NIET PER SE
 // NOORWEGEN en RUSLAND NOG IN DE KAART KRIJGEN
-// INDENTATION NOG VRAGEN
-// INITIELE DATA MAP DOEN 
 
 // function that is triggered when page is loaded
 window.onload = function() {
@@ -25,9 +23,9 @@ window.onload = function() {
 	function loadingPage(error, response) {
 		if (error) throw error;
 
-		// calling function drawBarChart
-		drawBarChart(response[0], 2)
-		createMap(response[1], response[2], 2012, response[0], 2)
+		drawBarChart(response[0], 2);
+		createMap(response[1], response[2], 2012, response[0], 2);
+		addLegend();
 	};
 };
 
@@ -57,47 +55,45 @@ function drawBarChart(educationExpenses, wishedYear){
 
 	// scaling for the axis
 	var scaleX = d3.scaleLinear()
-             		//.domain([0, maxDate]) //KIJKEN HOE DAT WERKT MET LANDEN
-             		.range([leftMargin, w]); // - rightMargin]);
+ 		//.domain([0, maxDate]) //KIJKEN HOE DAT WERKT MET LANDEN
+ 		.range([leftMargin, w]); // - rightMargin]);
 	var scaleY = d3.scaleLinear()
-					.domain([maxY * 1.10, 0])
-					.range([topMargin, h - bottomMargin]);
+		.domain([maxY * 1.10, 0])
+		.range([topMargin, h - bottomMargin]);
 
 	// axis characteristics
 	var x_axis = d3.axisBottom()
-					.scale(scaleX)
-					.ticks(0); //expenses.length
+		.scale(scaleX)
+		.ticks(0); //expenses.length
 						
 	var y_axis = d3.axisLeft()
-					.scale(scaleY);
+		.scale(scaleY);
 
 	//Create SVG element
-	var svg = d3.select("body")
-	            .append("svg")
-	            .attr("id", "barChart")
-	            .attr("width", w)
-	            .attr("height", h);
+	var svgBarChart = d3.select("#containerBarChart")
+        .append("svg")
+        .attr("id", "barChart")
+        .attr("width", w)
+        .attr("height", h);
 
 	// creating info window
 	var tipBar = d3.tip()
-				.attr("class", "d3-tip")
-			    .offset([-20, 0]).html(function(d, i) {
-		 	    		return "<strong>Country:</strong> <span style='color:black'>" + educationExpenses.data[i]["Country Name"] + "</span>" + "</br>" +
-		 	    			"<strong>Expenses:</strong> <span style='color:black'>" + Math.round(educationExpenses.data[i][year] * 100) / 100 
-		 	    			+ "%" + "</span>" + "<br>" });
-	svg.call(tipBar);
-
-	//console.log(educationExpenses)
+		.attr("class", "d3-tip")
+	    .offset([-20, 0]).html(function(d, i) {
+ 	    		return "<strong>Country:</strong> <span style='color:black'>" + educationExpenses.data[i]["Country Name"] + "</span>" + "</br>" +
+ 	    			"<strong>Expenses:</strong> <span style='color:black'>" + Math.round(educationExpenses.data[i][year] * 100) / 100 
+ 	    			+ "%" + "</span>" + "<br>" });
+	svgBarChart.call(tipBar);
 
 	// drawing bars
-	svg.selectAll("rect")
+	svgBarChart.selectAll("rect")
 	   .data(educationExpenses.data)
 	   .enter()
 	   .append("rect")
 	   .attr("class", "rect")
 	   .attr("id", function(d, i){
 	   		//console.log(educationExpenses.data[i]["Country Name"])
-	   		return educationExpenses.data[i]["Country Name"]})
+	   		return educationExpenses.data[i]["Country Code"]})
 	   .attr("x", function(d, i){
 	   		return i * ((w - leftMargin) / educationExpenses.data.length) + leftMargin;
 	   })
@@ -109,7 +105,7 @@ function drawBarChart(educationExpenses, wishedYear){
 	   		return educationExpenses.data[i][year] * 12;
 	   })
 	   .attr("fill", "grey")
-// FUNCTIEN VOOR MOOIE KLEUREN BAR CHART
+	// FUNCTIEN VOOR MOOIE KLEUREN BAR CHART
 	   	// function(d, i){
 	   	// 	if (educationExpenses.data[i][year] < 10){
 	   	// 		return "#2c7fb8";
@@ -142,25 +138,25 @@ function drawBarChart(educationExpenses, wishedYear){
 	   .on("mouseout", tipBar.hide);
 
 	// drawing x axis
-	svg.append("g")
+	svgBarChart.append("g")
 	    .attr("class", "axis")
 	    .attr("transform", "translate(0," + (h - bottomMargin) + ")")
 	    //.tickFormat(educationExpenses.data[i]["Country Code"])
 	    .call(x_axis);
 	// drawing y axis
-	svg.append("g")
+	svgBarChart.append("g")
 		.attr("class", "axis")
 	    .attr("transform", "translate(" + leftMargin + ", 0)")
 	    .call(y_axis);
 	
 	// x axis label
-	svg.append("text") 
+	svgBarChart.append("text") 
 		.attr("class", "axisText")            
 	    .attr("transform", "translate(" + ( w / 2) + " ," + (h - bottomMargin + 20) + ")")
 	    .style("text-anchor", "middle")
 	    .text("Country");
 	// y axis label
-	svg.append("text")
+	svgBarChart.append("text")
      	.attr("class", "axisText")
 	    .attr("transform", "rotate(-90)")
 	    .attr("y", 20)
@@ -168,8 +164,6 @@ function drawBarChart(educationExpenses, wishedYear){
 	    .attr("dy", "1em")
 	    .style("text-anchor", "middle")
 	    .text("Expenses on education (as % of total government expenses)");
-
-	//addLegend(w, h)
 };
 
 // function to draw map of europe
@@ -179,7 +173,6 @@ function createMap(uniRanking, countries, ranking, educationExpenses, wishedYear
 	var ranking2013 = [];
 	var ranking2014= [];
 
-	// 100/200/300 hardoced
 	// dividing list up into ranking per year
 	for (var i = 0; i < 100; i ++){
 		ranking2012.push(uniRanking.data[i])
@@ -193,83 +186,66 @@ function createMap(uniRanking, countries, ranking, educationExpenses, wishedYear
 		ranking2014.push(uniRanking.data[i])
 	};
 
-	// initial data INITiAL DATA NOG FIXEN!!!
-	//var wishedRanking = "ranking201" + ranking;
-	//console.log(ranking)
-
 	// determining width and height	
-	var w = 600;
+	var w = 550;
 	var h = 400;
 
 	//Define map projection and center Europe
 	var projection = d3.geoMercator()
-						.center([13, 52])
-						.translate([w / 2, h / 2])
-						.scale([w / 1.5]);
+		.center([13, 52])
+		.translate([w / 2, h / 2])
+		.scale([w / 1.5]);
 
 	//Define path generator
 	var path = d3.geoPath()
-				.projection(projection);
+		.projection(projection);
 
 	//Create SVG
-	var svg = d3.select("#container")
-				.append("svg")
-				.attr("id", "map")
-				.attr("width", w)
-				.attr("height", h);
-	
-	// KAN NOG ERBIJ ALS VLAK GROTER WIL MAAR DNA GAAT BAR CHART WEL UIT BEELD
-	// var svgText = d3.select("#text")
-	// 			.append("svg")
-	// 			.attr("id", "text")
-	// 			.attr("width", w / 2)
-	// 			.attr("height", h / 2);
+	var svgMap = d3.select("#containerMap")
+		.append("svg")
+		.attr("id", "map")
+		.attr("width", w)
+		.attr("height", h);
 
 	// creating info window
 	var tip = d3.tip()
-				.attr("class", "d3-tip")
-			    .offset([0, 0]).html(function(d, i) {
-		 	    		return "<strong>Country:</strong> <span style='color:black'>" + countries.features[i].properties.admin + "</span>" + "</br>" +
-		 	    			"<strong>Highest ranked univsersity:</strong> <span style='color:black'>" + getUni(countries.features[i].properties.admin, ranking)[1] + "</span>" + "</br>" });
-	svg.call(tip);
-	
-	// console.log(ranking)	
-	// console.log(countries)
+		.attr("class", "d3-tip")
+	    .offset([0, 0]).html(function(d, i) {
+ 	    		return "<strong>Country:</strong> <span style='color:black'>" + countries.features[i].properties.admin + "</span>" + "</br>" +
+ 	    			"<strong>Highest ranked univsersity:</strong> <span style='color:black'>" + getUni(countries.features[i].properties.admin, ranking2012)[1] + "</span>" + "</br>" });
+	svgMap.call(tip);
 
 	//Bind data and create one path per GeoJSON feature
-	svg.selectAll("path")
+	svgMap.selectAll("path")
 	   .data(countries.features)
 	   .enter()
 	   .append("path")
 	   .attr("d", path)
 	   .attr("class", "path")
 	   .attr("id", function(d, i){
-   			return countries.features[i].properties.admin})
+   			return countries.features[i].properties.admin;
+   		})
 	   .attr("stroke", "rgba(8, 81, 156, 0.2)")
-	   .attr("fill", "rgba(8, 81, 156, 0.6)")
-	   // FILL COUNTRIES WITH COLORS
-	   // 	function(countries, ranking, i){
-	   // 		for (var i = 0; i < 100; i ++){
-	   // 			if (countries.features[i].properties.admin == ranking[i]["country"]){
-	   // 				return "rgba(8, 81, 156, 0.6)";
-	   // 			}
-	   // 			else {
-	   // 				return "grey";
-	   // 			}
-	  	// 	}
-	  	// })
-	   	
-		// when move over country on map light up cuontry in barchart
+	   .attr("fill", function(d, i){
+	   	if (countries.features[i].properties.continent == "Europe"){
+	   			return "#2c7fb8";
+	   		}
+	   	else if (countries.features[i].properties.admin == "Antarctica"){ 
+	   			return "#a6bddb";
+	   		}
+	   	else {
+	   			return "#636363";
+	   		}
+	   })   	
+		// when move over country on map light up country in barchart
 	   .on("mouseenter", function(countries, i) {
-			country = "rect#" + countries.properties.admin;
+			country = "rect#" + countries.properties.adm0_a3;
   			d3.select("body")
   			.selectAll(country)
-  			.style("fill", "red")
-  			// .on("mouseover", tipBar.show)
-  			// .on("mouseout", tipBar.hide); 
-  		})
+  			.style("fill", "gold") 
+  		})	   	
   		.on("mouseleave", function(countries, i){
-			country = "rect#" + countries.properties.admin;
+			country = "rect#" + countries.properties.adm0_a3;
   			d3.select("body")
   			.selectAll(country)
   			.style("fill", "grey");
@@ -285,7 +261,7 @@ function createMap(uniRanking, countries, ranking, educationExpenses, wishedYear
 	updateGraphs(uniRanking, countries, ranking2012, ranking2013, ranking2014, educationExpenses, wishedYear);
 };
 
-// function to retrieve universities listed in country hoovered over
+// function to retrieve universities in country when hoovered over
 function getUni(country, wishedYear) {
 	var unis = [];
 
@@ -296,28 +272,17 @@ function getUni(country, wishedYear) {
 			unis.push(wishedYear[i].institution)
 			unis.push(wishedYear[i].publications)
 			unis.push(wishedYear[i].national_rank)
-			unis.push("<br>");
+			unis.push("<br>")
 		};		
 	};
 	return unis;
 };
 
-// function to print additional info into html
-// function additionalInfo(countries, i){
-// 	var country = document.getElementById("country").innerHTML = countries.features[i].properties.admin;
-// 	var uni = document.getElementById("uniText").innerHTML = getUni(countries.features[i].properties.admin, ranking);
-
-// 	return country//, uni;
-// }
-
-// function to update both map and bar chart
+// function to update map and bar chart
 function updateGraphs(uniRanking, countries, ranking2012, ranking2013, ranking2014, educationExpenses, wishedYear){
 
 	// change year variable to show updated data when clicked
 	document.getElementById("2012").onclick = function(){
-		
-		// remove old bar chart svg
-		// console.log("updatefunciton")
 		d3.select("#barChart").remove();
 		d3.select("#map").remove();
 		wishedYear = 2;
@@ -328,9 +293,6 @@ function updateGraphs(uniRanking, countries, ranking2012, ranking2013, ranking20
 
 	// change year variable to show updated data when clicked
 	document.getElementById("2013").onclick = function(){
-		
-		// remove old bar chart svg
-		console.log("updatefunciton")
 		d3.select("#barChart").remove();
 		d3.select("#map").remove();
 		wishedYear = 3;
@@ -341,9 +303,6 @@ function updateGraphs(uniRanking, countries, ranking2012, ranking2013, ranking20
 
 	// change year variable to show updated data when clicked
 	document.getElementById("2014").onclick = function(){
-		
-		// remove old bar chart svg
-		console.log("updatefunciton")
 		d3.select("#barChart").remove();
 		d3.select("#map").remove();
 		wishedYear = 4;
@@ -353,84 +312,78 @@ function updateGraphs(uniRanking, countries, ranking2012, ranking2013, ranking20
 	};
 };
 
-// function to draw a legend into SVG element
-// function addLegend(wBarChart, hBarChart){
+// function to draw a legend into SVG element VERSCHUIFT NOG NA UPDATEN
+function addLegend(){
 	
-// 	// adding legend (colors chosen using color brewer color blind friendly)
-// 	var w = wBarChart //wBarChart + 50;
-// 	var h = 50 //hBarChart + 50;
+	// creating svg for legend
+	var w = 550;
+	var h = 50;
 
-// 	var legend = d3.select("body")
-// 				.append("svg")
-// 				.attr("id", "legend")
-// 				.attr("width", w)
-// 				.attr("height", h);
+	var legend = d3.select("#containerMap")
+		.append("svg")
+		.attr("id", "legend")
+		.attr("width", w)
+		.attr("height", h);
+
+	var three = [1, 2];
 	
-// 	var three = [1, 2, 3];
-	
-// 	legend.append("rect")
-// 		  .data(three)
-// 		  .enter()
-// 		  .append("rect")
-// 		  .attr("class", "legend")
-// 	      .attr("y", h - 10) //h + 100 - (i * 30);
-// 	      .attr("x", function(d, i){
-// 	      		return w - 100;	//return w - (i * 100);
-// 	      	})
-// 	      .attr("width", 5)
-// 	      .attr("height", 5)
-// 	      .attr("fill", "blue")
-// 	      // .style("fill", function(d, i){
-// 	      // 	if (h - h + 100 - (i * 30) == 100 ) {return "#c51b8a"}
-// 	      // 	else if (h - h + 100 - (i * 30) == 70) {return "#fa9fb5"}
-// 	      // 	else {return "#000000"}
-// 	      // });
+	legend.selectAll("rect")
+	  .data(three)
+	  .enter()
+	  .append("rect")
+	  .attr("class", "legend")
+      .attr("y", h / 2)
+      .attr("x", function(d, i){
+      	return w - 200 - (i * 200);
+      })
+      .attr("width", 20)
+      .attr("height", 20)
+      .style("fill", function(d, i){
+      	if (w - 200 - (i * 200) == w - 200 ) { 
+      		return "#636363"; }
+      	else { 
+      		return "#2c7fb8"; }
+      });
 
-// 	// adding text in legend
-// 	// svg.append("text")
-// 	// 	.attr("x", w - 100)
-// 	//     .attr("y", h - h + 100 - (3 * 30))
-// 	//     .attr("dy", ".35em")
-// 	//     .style("text-anchor", "end")
-// 	//     .text("GDP/Subject ratio (Australia as benchmark):");
+	legend.append("text")
+		.attr("x", function(d, i){
+			return w - 165 - (1 * 165);
+		})
+	    .attr("y", (h / 2) + 10)
+	    .attr("dy", ".35em")
+	    .style("text-anchor", "end")
+	    .text("Europe");
 
-// 	// svg.append("text")
-// 	// 	.attr("x", w - 325) // - 100)
-// 	//     .attr("y", h - 10)//- h + 100 - (0 * 30))
-// 	//     .attr("dy", ".35em")
-// 	//     .style("text-anchor", "end")
-// 	//     .text("Expenses: < 10 %");
+	legend.append("text")
+		.attr("x", w - 140)
+	    .attr("y", (h / 2) + 10)
+	    .attr("dy", ".35em")
+	    .style("text-anchor", "end")
+	    .text("Other");
+};
 
-// 	// svg.append("text")
-// 	// 	.attr("x", w - 117) // - 100)
-// 	//     .attr("y", h - 10) //h + 100 - (1 * 30) )
-// 	//     .attr("dy", ".35em")
-// 	//     .style("text-anchor", "end")
-// 	//     .text(" > 10 % and < 15 %");
 
-// 	// svg.append("text")
-// 	// 	.attr("x", w) // - 100)
-// 	//     .attr("y", h - 10) //h + 100 - (2 * 30) )
-// 	//     .attr("dy", ".35em")
-// 	//     .style("text-anchor", "end")
-// 	//     .text(" > 15 % and < 20 %");
-// };
+
+
+
+
+
 
 // function that toggles between hiding and showing the dropdown content when clicked on
-function dropwdownFunction() {
-    document.getElementById("myDropdown").classList.toggle("show");
-};
+// function dropwdownFunction() {
+//     document.getElementById("myDropdown").classList.toggle("show");
+// };
 
-// Close the dropdown if the user clicks outside of it
-window.onclick = function(event) {
-  if (!event.target.matches(".dropbtn")) {
+// // Close the dropdown if the user clicks outside of it
+// window.onclick = function(event) {
+//   if (!event.target.matches(".dropbtn")) {
 
-  	var dropdowns = document.getElementsByClassName("dropdown-content");
-    for (var i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains("show")) {
-        openDropdown.classList.remove("show");
-      };
-    };
-  };
-};
+//   	var dropdowns = document.getElementsByClassName("dropdown-content");
+//     for (var i = 0; i < dropdowns.length; i++) {
+//       var openDropdown = dropdowns[i];
+//       if (openDropdown.classList.contains("show")) {
+//         openDropdown.classList.remove("show");
+//       };
+//     };
+//   };
+// };
