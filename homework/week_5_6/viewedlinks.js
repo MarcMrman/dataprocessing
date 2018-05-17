@@ -1,13 +1,14 @@
 /** 
 * Marc Moorman
 * 10769781
-* program that...... 
+* Program with interactive charts who both display information. 
+* The visualisations (map and bar chart) are both drawn with their own function. 
 **/
 
 // function that is triggered when page is loaded
 window.onload = function() {
 
-	// queuing steps to do before drawing plot
+	// queuing files to be loaded in
 	d3.queue()
 	  .defer(d3.json, "./Governmental education expenditure.json")
 	  .defer(d3.json, "./World uni ranking.json")
@@ -21,16 +22,17 @@ window.onload = function() {
 		drawBarChart(response[0], 2);
 		addLegend();
 		createMap(response[1], response[2], 2012, response[0], 2);
+		description();
 	};
 };
 
 // function to draw bar charts depending on year given
 function drawBarChart(educationExpenses, wishedYear){
 	
-	// initial data printed
+	// initial data
 	var year = "201"+ wishedYear + " [YR201" + wishedYear + "]"
 
-	// Characteristics for SVG element
+	// characteristics for SVG element
 	var w = 500;
 	var h = 300;
 	var barPadding = 5;
@@ -61,14 +63,14 @@ function drawBarChart(educationExpenses, wishedYear){
 	var y_axis = d3.axisLeft()
 		.scale(scaleY);
 
-	//Create SVG element
+	// create SVG element
 	var svgBarChart = d3.select("#containerBarChart")
         .append("svg")
         .attr("id", "barChart")
         .attr("width", w)
         .attr("height", h);
 
-	// creating info window
+	// creating info window for hovering
 	var tipBar = d3.tip()
 		.attr("class", "d3-tip")
 	    .offset([-20, 0]).html(function(d, i) {
@@ -77,7 +79,7 @@ function drawBarChart(educationExpenses, wishedYear){
 			+ "%" + "</span>" + "<br>" });
 	svgBarChart.call(tipBar);
 
-	// drawing bars
+	// drawing bars in bar chart
 	svgBarChart.selectAll("rect")
 	   .data(educationExpenses.data)
 	   .enter()
@@ -147,28 +149,28 @@ function createMap(uniRanking, countries, ranking, educationExpenses, wishedYear
 		ranking2014.push(uniRanking.data[i])
 	};
 
-	// determining width and height	
+	// svgMap width and height	
 	var w = 550;
 	var h = 400;
 
-	//Define map projection and center Europe
+	// define map projection and center Europe
 	var projection = d3.geoMercator()
 		.center([13, 52])
 		.translate([w / 2, h / 2])
 		.scale([w / 1.5]);
 
-	//Define path generator
+	// define path generator
 	var path = d3.geoPath()
 		.projection(projection);
 
-	//Create SVG
+	// create SVG
 	var svgMap = d3.select("#containerMap")
 		.append("svg")
 		.attr("id", "map")
 		.attr("width", w)
 		.attr("height", h);
 
-	// creating info window
+	// creating info window for hovering over country
 	var tip = d3.tip()
 		.attr("class", "d3-tip")
 	    .offset(function (d, i) {	
@@ -187,7 +189,7 @@ function createMap(uniRanking, countries, ranking, educationExpenses, wishedYear
     		"<strong>Highest ranked univsersity:</strong> <span style='color:black'>" + getUni(countries.features[i].properties.admin, ranking2012)[1] + "</span>" + "</br>" });
 	svgMap.call(tip);
 
-	//Bind data and create one path per GeoJSON feature
+	// bind data and create one path per GeoJSON feature
 	svgMap.selectAll("path")
 	   .data(countries.features)
 	   .enter()
@@ -199,7 +201,7 @@ function createMap(uniRanking, countries, ranking, educationExpenses, wishedYear
    		})
 	   .attr("stroke", "rgba(8, 81, 156, 0.2)")
 	   .attr("fill", function(d, i){
-		   	if (countries.features[i].properties.continent == "Europe"){
+		   	if (countries.features[i].properties.region_un == "Europe"){
 		   			return "#2c7fb8";
 		   		}
 		   	else if (countries.features[i].properties.admin == "Antarctica"){ 
@@ -209,12 +211,12 @@ function createMap(uniRanking, countries, ranking, educationExpenses, wishedYear
 		   			return "#636363";
 		   		}
 		   })   	
-		// mouse events on map
+		// event for mouse to light up a bar when the corresponding country is hovered over
 	   .on("mouseenter", function(countries, i) {
 			var country = "rect#" + countries.properties.adm0_a3;
   			d3.select("body")
   			.selectAll(country)
-  			.style("fill", "gold") 
+  			.style("fill", "rgba(255,191,0, 0.7)") 
   		})	   	
   		.on("mouseleave", function(countries, i){
 			var country = "rect#" + countries.properties.adm0_a3;
@@ -224,7 +226,7 @@ function createMap(uniRanking, countries, ranking, educationExpenses, wishedYear
   			})
 	   .on("mouseover", tip.show)
 	   .on("mouseout", tip.hide) 
-	   //displays universities in country in top 100 when clicked on
+	   // display universities in a country in top 100 when clicked on country
    	   .on("click", function(uniRanking, i){
 	   		document.getElementById("country").innerHTML = countries.features[i].properties.admin;
 	   		document.getElementById("uniText").innerHTML = getUni(countries.features[i].properties.admin, ranking);
@@ -246,10 +248,10 @@ function addLegend(){
 		.attr("width", w)
 		.attr("height", h);
 
-	var three = [1, 2];
-	
+	// drawing rectangles for legend
+	var two = [1, 2];
 	legend.selectAll("rect")
-	  .data(three)
+	  .data(two)
 	  .enter()
 	  .append("rect")
 	  .attr("class", "legend")
@@ -261,9 +263,11 @@ function addLegend(){
       .attr("height", 20)
       .style("fill", function(d, i){
       	if (w - 200 - (i * 200) == w - 200 ) { 
-      		return "#636363"; }
+      		return "#636363"; 
+      	}
       	else { 
-      		return "#2c7fb8"; }
+      		return "#2c7fb8"; 
+      	}
       });
 
 	legend.append("text")
@@ -285,9 +289,10 @@ function addLegend(){
 
 // function to retrieve universities in country when hoovered over
 function getUni(country, wishedYear) {
+	
 	var unis = [];
 
-	// gathering uni's per country
+	// gathering uni's for country hovered over
 	for (var i = 0; i < wishedYear.length; i ++){
 		if (country == wishedYear[i].country){
 			unis.push(wishedYear[i].world_rank)
@@ -332,4 +337,20 @@ function updateGraphs(uniRanking, countries, ranking2012, ranking2013, ranking20
 		drawBarChart(educationExpenses, wishedYear);
 		createMap(uniRanking, countries, wishedRanking, educationExpenses, wishedYear);
 	};
+};
+
+// function for adding text to specific part of the webpage
+function description(){
+	
+	// put text in container
+	d3.select("#description")
+		.append("p")
+		.text("This page gives a visualisation of universities on the European continent that are listed in the top 100 of \
+		universities in the world. The map on the left shows the countries in the European area and gives a quick view on which \
+		university of that country is highest listed between the elites of the world. By clicking on the country, all listed universities\
+		get displayed together with additional information. The bar chart on the right shows the \
+		percentage of the total governmental expenses that a country has spend on education. The meaning of this visualisation \
+		is to look if more expenses on education (relatively) is a guarantee for higher or more listings in the top of the world. \
+		(Note: There was not data available for all years for all countries on education expenses, there a minimum percentage \
+		of 0.1 has been put.).")
 };
