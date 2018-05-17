@@ -4,11 +4,6 @@
 * program that...... 
 **/
 
-// Feedback:
-// barchart niet helemaal verwijderen maar alleen bars
-// Landnamen op x-as barchart LICHT OP ALS HOOVERT DUS HOEFT NIET PER SE
-// NOORWEGEN en RUSLAND NOG IN DE KAART KRIJGEN
-
 // function that is triggered when page is loaded
 window.onload = function() {
 
@@ -19,13 +14,13 @@ window.onload = function() {
 	  .defer(d3.json, "./countryCoordinates.json")
 	  .awaitAll(loadingPage);
 	
-	// response to request
+	// function to load page after queuing
 	function loadingPage(error, response) {
 		if (error) throw error;
 
 		drawBarChart(response[0], 2);
-		createMap(response[1], response[2], 2012, response[0], 2);
 		addLegend();
+		createMap(response[1], response[2], 2012, response[0], 2);
 	};
 };
 
@@ -44,19 +39,17 @@ function drawBarChart(educationExpenses, wishedYear){
 	var topMargin = 10
 	var rightMargin = 35;
 	
-	// max expenses 29 NIET HARDCODEN
+	// finding max expenses for y-axis
 	var expenses = [];
-	for (var i = 0; i < 29; i ++){
+	for (var i = 0; i < educationExpenses.data.length; i ++){
 		var maxY = educationExpenses.data[i][year]
 		expenses.push(maxY)
 	}    
-
 	var maxY = Math.max.apply(Math, expenses)
 
 	// scaling for the axis
 	var scaleX = d3.scaleLinear()
- 		//.domain([0, maxDate]) //KIJKEN HOE DAT WERKT MET LANDEN
- 		.range([leftMargin, w]); // - rightMargin]);
+ 		.range([leftMargin, w]);
 	var scaleY = d3.scaleLinear()
 		.domain([maxY * 1.10, 0])
 		.range([topMargin, h - bottomMargin]);
@@ -64,8 +57,7 @@ function drawBarChart(educationExpenses, wishedYear){
 	// axis characteristics
 	var x_axis = d3.axisBottom()
 		.scale(scaleX)
-		.ticks(0); //expenses.length
-						
+		.ticks(0);			
 	var y_axis = d3.axisLeft()
 		.scale(scaleY);
 
@@ -80,9 +72,9 @@ function drawBarChart(educationExpenses, wishedYear){
 	var tipBar = d3.tip()
 		.attr("class", "d3-tip")
 	    .offset([-20, 0]).html(function(d, i) {
- 	    		return "<strong>Country:</strong> <span style='color:black'>" + educationExpenses.data[i]["Country Name"] + "</span>" + "</br>" +
- 	    			"<strong>Expenses:</strong> <span style='color:black'>" + Math.round(educationExpenses.data[i][year] * 100) / 100 
- 	    			+ "%" + "</span>" + "<br>" });
+    		return "<strong>Country:</strong> <span style='color:black'>" + educationExpenses.data[i]["Country Name"] + "</span>" + "</br>" +
+			"<strong>Expenses:</strong> <span style='color:black'>" + Math.round(educationExpenses.data[i][year] * 100) / 100 
+			+ "%" + "</span>" + "<br>" });
 	svgBarChart.call(tipBar);
 
 	// drawing bars
@@ -92,7 +84,6 @@ function drawBarChart(educationExpenses, wishedYear){
 	   .append("rect")
 	   .attr("class", "rect")
 	   .attr("id", function(d, i){
-	   		//console.log(educationExpenses.data[i]["Country Name"])
 	   		return educationExpenses.data[i]["Country Code"]})
 	   .attr("x", function(d, i){
 	   		return i * ((w - leftMargin) / educationExpenses.data.length) + leftMargin;
@@ -105,35 +96,6 @@ function drawBarChart(educationExpenses, wishedYear){
 	   		return educationExpenses.data[i][year] * 12;
 	   })
 	   .attr("fill", "grey")
-	// FUNCTIEN VOOR MOOIE KLEUREN BAR CHART
-	   	// function(d, i){
-	   	// 	if (educationExpenses.data[i][year] < 10){
-	   	// 		return "#2c7fb8";
-	   	// 	}
-	   	// 	else if (educationExpenses.data[i][year] > 10 && educationExpenses.data[i][year] < 15){
-	   	// 		return "#7fcdbb";
-	   	// 	}
-	   	// 	else if (educationExpenses.data[i][year] > 15 && educationExpenses.data[i][year] < 20){
-	   	// 		return "#edf8b1";
-	   	// 	}
-	   //})
-	   // when clicked on mark country on map
-		//.on("mousemove", function(educationExpenses, i) {
-			// console.log(educationExpenses.data["Country Name"])
-			// var country = "path#" + educationExpenses.data["Country Name"];
-			// //var country = "path#" + countries.properties.admin;
-			// //console.log(country)
-			// console.log(d3.select("#container"));
-			
-			// //console.log(d3.select("body").select(country));
-				
-			// d3.select("#container")
-			// .selectAll(country)
-			// .attr("fill", "red");
-			// })
-
-    			// var country = "rect#" + countries.properties.admin;
-    			// console.log(d3.select("body").select(country));
 	   .on("mouseover", tipBar.show)
 	   .on("mouseout", tipBar.hide);
 
@@ -141,7 +103,6 @@ function drawBarChart(educationExpenses, wishedYear){
 	svgBarChart.append("g")
 	    .attr("class", "axis")
 	    .attr("transform", "translate(0," + (h - bottomMargin) + ")")
-	    //.tickFormat(educationExpenses.data[i]["Country Code"])
 	    .call(x_axis);
 	// drawing y axis
 	svgBarChart.append("g")
@@ -210,9 +171,20 @@ function createMap(uniRanking, countries, ranking, educationExpenses, wishedYear
 	// creating info window
 	var tip = d3.tip()
 		.attr("class", "d3-tip")
-	    .offset([0, 0]).html(function(d, i) {
- 	    		return "<strong>Country:</strong> <span style='color:black'>" + countries.features[i].properties.admin + "</span>" + "</br>" +
- 	    			"<strong>Highest ranked univsersity:</strong> <span style='color:black'>" + getUni(countries.features[i].properties.admin, ranking2012)[1] + "</span>" + "</br>" });
+	    .offset(function (d, i) {	
+	    	if (d.geometry.coordinates[0][0][0][0] == 8.10273437500004){
+	    		return [300, 0];
+	    	}
+	    	else if (d.geometry.coordinates[0][0][0][1] == 43.743798828124994){
+	    		return [400, 250];
+	    	}
+	    	else {
+	    		return [0, 0];
+	    	}
+        })
+	    .html(function(d, i) {
+    		return "<strong>Country:</strong> <span style='color:black'>" + countries.features[i].properties.admin + "</span>" + "</br>" +
+    		"<strong>Highest ranked univsersity:</strong> <span style='color:black'>" + getUni(countries.features[i].properties.admin, ranking2012)[1] + "</span>" + "</br>" });
 	svgMap.call(tip);
 
 	//Bind data and create one path per GeoJSON feature
@@ -227,25 +199,25 @@ function createMap(uniRanking, countries, ranking, educationExpenses, wishedYear
    		})
 	   .attr("stroke", "rgba(8, 81, 156, 0.2)")
 	   .attr("fill", function(d, i){
-	   	if (countries.features[i].properties.continent == "Europe"){
-	   			return "#2c7fb8";
-	   		}
-	   	else if (countries.features[i].properties.admin == "Antarctica"){ 
-	   			return "#a6bddb";
-	   		}
-	   	else {
-	   			return "#636363";
-	   		}
-	   })   	
-		// when move over country on map light up country in barchart
+		   	if (countries.features[i].properties.continent == "Europe"){
+		   			return "#2c7fb8";
+		   		}
+		   	else if (countries.features[i].properties.admin == "Antarctica"){ 
+		   			return "#a6bddb";
+		   		}
+		   	else {
+		   			return "#636363";
+		   		}
+		   })   	
+		// mouse events on map
 	   .on("mouseenter", function(countries, i) {
-			country = "rect#" + countries.properties.adm0_a3;
+			var country = "rect#" + countries.properties.adm0_a3;
   			d3.select("body")
   			.selectAll(country)
   			.style("fill", "gold") 
   		})	   	
   		.on("mouseleave", function(countries, i){
-			country = "rect#" + countries.properties.adm0_a3;
+			var country = "rect#" + countries.properties.adm0_a3;
   			d3.select("body")
   			.selectAll(country)
   			.style("fill", "grey");
@@ -259,6 +231,56 @@ function createMap(uniRanking, countries, ranking, educationExpenses, wishedYear
 	   	});
 
 	updateGraphs(uniRanking, countries, ranking2012, ranking2013, ranking2014, educationExpenses, wishedYear);
+};
+
+// function to draw a legend
+function addLegend(){
+	
+	// creating svg for legend
+	var w = 550;
+	var h = 50;
+
+	var legend = d3.select("#containerMap")
+		.append("svg")
+		.attr("id", "legend")
+		.attr("width", w)
+		.attr("height", h);
+
+	var three = [1, 2];
+	
+	legend.selectAll("rect")
+	  .data(three)
+	  .enter()
+	  .append("rect")
+	  .attr("class", "legend")
+      .attr("y", h / 2)
+      .attr("x", function(d, i){
+      	return w - 200 - (i * 200);
+      })
+      .attr("width", 20)
+      .attr("height", 20)
+      .style("fill", function(d, i){
+      	if (w - 200 - (i * 200) == w - 200 ) { 
+      		return "#636363"; }
+      	else { 
+      		return "#2c7fb8"; }
+      });
+
+	legend.append("text")
+		.attr("x", function(d, i){
+			return w - 165 - (1 * 165);
+		})
+	    .attr("y", (h / 2) + 10)
+	    .attr("dy", ".35em")
+	    .style("text-anchor", "end")
+	    .text("Europe");
+
+	legend.append("text")
+		.attr("x", w - 140)
+	    .attr("y", (h / 2) + 10)
+	    .attr("dy", ".35em")
+	    .style("text-anchor", "end")
+	    .text("Other");
 };
 
 // function to retrieve universities in country when hoovered over
@@ -311,79 +333,3 @@ function updateGraphs(uniRanking, countries, ranking2012, ranking2013, ranking20
 		createMap(uniRanking, countries, wishedRanking, educationExpenses, wishedYear);
 	};
 };
-
-// function to draw a legend into SVG element VERSCHUIFT NOG NA UPDATEN
-function addLegend(){
-	
-	// creating svg for legend
-	var w = 550;
-	var h = 50;
-
-	var legend = d3.select("#containerMap")
-		.append("svg")
-		.attr("id", "legend")
-		.attr("width", w)
-		.attr("height", h);
-
-	var three = [1, 2];
-	
-	legend.selectAll("rect")
-	  .data(three)
-	  .enter()
-	  .append("rect")
-	  .attr("class", "legend")
-      .attr("y", h / 2)
-      .attr("x", function(d, i){
-      	return w - 200 - (i * 200);
-      })
-      .attr("width", 20)
-      .attr("height", 20)
-      .style("fill", function(d, i){
-      	if (w - 200 - (i * 200) == w - 200 ) { 
-      		return "#636363"; }
-      	else { 
-      		return "#2c7fb8"; }
-      });
-
-	legend.append("text")
-		.attr("x", function(d, i){
-			return w - 165 - (1 * 165);
-		})
-	    .attr("y", (h / 2) + 10)
-	    .attr("dy", ".35em")
-	    .style("text-anchor", "end")
-	    .text("Europe");
-
-	legend.append("text")
-		.attr("x", w - 140)
-	    .attr("y", (h / 2) + 10)
-	    .attr("dy", ".35em")
-	    .style("text-anchor", "end")
-	    .text("Other");
-};
-
-
-
-
-
-
-
-
-// function that toggles between hiding and showing the dropdown content when clicked on
-// function dropwdownFunction() {
-//     document.getElementById("myDropdown").classList.toggle("show");
-// };
-
-// // Close the dropdown if the user clicks outside of it
-// window.onclick = function(event) {
-//   if (!event.target.matches(".dropbtn")) {
-
-//   	var dropdowns = document.getElementsByClassName("dropdown-content");
-//     for (var i = 0; i < dropdowns.length; i++) {
-//       var openDropdown = dropdowns[i];
-//       if (openDropdown.classList.contains("show")) {
-//         openDropdown.classList.remove("show");
-//       };
-//     };
-//   };
-// };

@@ -4,6 +4,7 @@
 * viewedlinks css file
 */
 
+/* header make up*/
 h1 {
 	text-align: right;
 	font-family: arial;
@@ -27,7 +28,7 @@ h5 {
   text-align: center;
 }
 
-/*hovering on country in map*/
+/* hoover make up map*/
 path:hover {
   fill: rgba(255,191,0, 0.7);
   cursor: pointer;
@@ -49,7 +50,6 @@ path:hover {
   font-family: arial;
 }
 
-/* Creates a small triangle extender for the tooltip */
 .d3-tip:after {
   box-sizing: border-box;
   display: inline;
@@ -62,23 +62,24 @@ path:hover {
   text-align: center;
 }
 
-/* Style northward tooltips differently */
 .d3-tip.n:after {
   margin: -1px 0 0 0;
   top: 100%;
   left: 0;
 }
 
+/* hoover make up bar chart */
 .rect:hover {
   fill: gold ;
 }
 
-/*dropdown menu make up   #3498DB*/
+/* dropdown menu make up */
 .dropdown {
     position: relative;
     display: inline-block;
     float: inherit;
 }
+
 .dropdown-menu {
     display: none;
     position: absolute;
@@ -90,6 +91,7 @@ path:hover {
     right: 0;
 }
 
+/* make up for containers content*/
 #containerBarChart {
   width: 600px;
   margin-left: auto;
