@@ -3,12 +3,15 @@
 * 10769781
 * Program with interactive charts who both display information. 
 * The visualisations (map and bar chart) are both drawn with their own function. 
+* With an update function and interaction (also inbetween graphs) these visualisations are made dynamical. 
+* Goal of the program is to give quick and clear insight in the information. 
+* All the datasets were first downloaded as CSV files and converted into JSON by using convertCSV2JSON.py
 **/
 
 // function that is triggered when page is loaded
 window.onload = function() {
 
-	// queuing files to be loaded in
+	// data is loaded in as JSON
 	d3.queue()
 	  .defer(d3.json, "./Governmental education expenditure.json")
 	  .defer(d3.json, "./World uni ranking.json")
@@ -97,7 +100,7 @@ function drawBarChart(educationExpenses, wishedYear){
 	   .attr("height", function(d, i){
 	   		return educationExpenses.data[i][year] * 12;
 	   })
-	   .attr("fill", "grey")
+	   .attr("fill", "#bdbdbd")
 	   .on("mouseover", tipBar.show)
 	   .on("mouseout", tipBar.hide);
 
@@ -222,7 +225,7 @@ function createMap(uniRanking, countries, ranking, educationExpenses, wishedYear
 			var country = "rect#" + countries.properties.adm0_a3;
   			d3.select("body")
   			.selectAll(country)
-  			.style("fill", "grey");
+  			.style("fill", "#bdbdbd");
   			})
 	   .on("mouseover", tip.show)
 	   .on("mouseout", tip.hide) 
@@ -230,6 +233,7 @@ function createMap(uniRanking, countries, ranking, educationExpenses, wishedYear
    	   .on("click", function(uniRanking, i){
 	   		document.getElementById("country").innerHTML = countries.features[i].properties.admin;
 	   		document.getElementById("uniText").innerHTML = getUni(countries.features[i].properties.admin, ranking);
+
 	   	});
 
 	updateGraphs(uniRanking, countries, ranking2012, ranking2013, ranking2014, educationExpenses, wishedYear);
@@ -270,6 +274,7 @@ function addLegend(){
       	}
       });
 
+    // adding text to the legend
 	legend.append("text")
 		.attr("x", function(d, i){
 			return w - 165 - (1 * 165);
@@ -290,25 +295,25 @@ function addLegend(){
 // function to retrieve universities in country when hoovered over
 function getUni(country, wishedYear) {
 	
-	var unis = [];
+	var universities = [];
 
-	// gathering uni's for country hovered over
+	// gathering information on universities for country hovered over
 	for (var i = 0; i < wishedYear.length; i ++){
 		if (country == wishedYear[i].country){
-			unis.push(wishedYear[i].world_rank)
-			unis.push(wishedYear[i].institution)
-			unis.push(wishedYear[i].publications)
-			unis.push(wishedYear[i].national_rank)
-			unis.push("<br>")
+			universities.push(wishedYear[i].world_rank)
+			universities.push(wishedYear[i].institution)
+			universities.push(wishedYear[i].publications)
+			universities.push(wishedYear[i].national_rank)
+			universities.push("<br>")
 		};		
 	};
-	return unis;
+	return universities;
 };
 
 // function to update map and bar chart
 function updateGraphs(uniRanking, countries, ranking2012, ranking2013, ranking2014, educationExpenses, wishedYear){
 
-	// change year variable to show updated data when clicked
+	// onclick function to change the year presented in graphs
 	document.getElementById("2012").onclick = function(){
 		d3.select("#barChart").remove();
 		d3.select("#map").remove();
@@ -318,7 +323,6 @@ function updateGraphs(uniRanking, countries, ranking2012, ranking2013, ranking20
 		createMap(uniRanking, countries, wishedRanking, educationExpenses, wishedYear);
 	};	
 
-	// change year variable to show updated data when clicked
 	document.getElementById("2013").onclick = function(){
 		d3.select("#barChart").remove();
 		d3.select("#map").remove();
@@ -328,7 +332,6 @@ function updateGraphs(uniRanking, countries, ranking2012, ranking2013, ranking20
 		createMap(uniRanking, countries, wishedRanking, educationExpenses, wishedYear);
 	};
 
-	// change year variable to show updated data when clicked
 	document.getElementById("2014").onclick = function(){
 		d3.select("#barChart").remove();
 		d3.select("#map").remove();
@@ -339,18 +342,18 @@ function updateGraphs(uniRanking, countries, ranking2012, ranking2013, ranking20
 	};
 };
 
-// function for adding text to specific part of the webpage
+// function to add the storytelling
 function description(){
 	
 	// put text in container
 	d3.select("#description")
 		.append("p")
-		.text("This page gives a visualisation of universities on the European continent that are listed in the top 100 of \
-		universities in the world. The map on the left shows the countries in the European area and gives a quick view on which \
-		university of that country is highest listed between the elites of the world. By clicking on the country, all listed universities\
-		get displayed together with additional information. The bar chart on the right shows the \
-		percentage of the total governmental expenses that a country has spend on education. The meaning of this visualisation \
-		is to look if more expenses on education (relatively) is a guarantee for higher or more listings in the top of the world. \
-		(Note: There was not data available for all years for all countries on education expenses, there a minimum percentage \
-		of 0.1 has been put.).")
+		.text("This page is a visualisation of universities on the European continent that are listed in the top 100 of universities in the \
+		world and the expenses on education in the corresponding countries. The map on the left shows the countries in the European area and \
+		gives a quick view on which university of that country is highest listed between the elites of the world. By clicking on the country, \
+		all listed universities	get displayed together with additional information. The bar chart on the right shows the percentage of the total \
+		governmental expenses that a country has spend on education. Looking at this information you can analyze if there is a reasonable connection \
+		between (the relative) government expenses on education and the international performance of their universities. So, is it reasonable to \
+		expect universities to perform better on an international level if their government spends more money to subsidize education? \
+		(Note: There was not data available for all years for all countries on education expenses, there, a minimum percentage of 0.1 has been put.)")
 };

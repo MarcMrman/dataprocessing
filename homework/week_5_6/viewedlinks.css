@@ -4,16 +4,12 @@
 * Viewedlinks css file
 */
 
-/* header make up*/
+/* headers make up*/
 h1 {
 	text-align: right;
 	font-family: arial;
 	font-size: 10px;
   background-color: rgba(255,191,0, 0.7);
-}
-
-div {
-  border-bottom-color: rgba(255,191,0, 0.7); /*gold;*/
 }
 
 h2, h3, h4 {
@@ -41,6 +37,7 @@ path:hover {
   cursor: pointer;
 }
 
+/*axis make up*/
 .axisText {
 	font-family: arial;
 	font-size: 10px;
@@ -82,9 +79,11 @@ path:hover {
 
 /* dropdown menu make up */
 .dropdown {
-    position: relative;
+    position: absolute;
     display: inline-block;
-    float: inherit;
+    left: 62.5%;
+    top: 13.5%;
+    /*float: inherit;*/
 }
 
 .dropdown-menu {
@@ -142,5 +141,15 @@ path:hover {
 #uniText {
   font-family: arial;
   font-size: 15px;
+  text-align: center;
+}
+
+/*creating a bottom row*/
+.fixed-row-bottom { 
+  position: absolute;
+  width: 1265px;
+  background-color: rgba(255,191,0, 0.8); 
+  left: 1%;
+  top: 160%;
   text-align: center;
 }
